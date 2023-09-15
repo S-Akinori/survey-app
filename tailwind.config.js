@@ -17,7 +17,8 @@ export default {
             },
         },
         colors: {
-          main: '#6B9BD1'
+          main: '#6B9BD1',
+          "main-cont": "#FCFCFC"
         }
     },
 
