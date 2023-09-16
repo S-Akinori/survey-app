@@ -1,6 +1,6 @@
 import React from 'react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { Head } from '@inertiajs/react';
+import { Head, Link, useForm } from '@inertiajs/react';
 import { PageProps } from '@/types';
 import { Box, Button, Container, Modal, styled } from '@mui/material';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
@@ -20,6 +20,10 @@ const VisuallyHiddenInput = styled('input')`
 export default function CreateList({ auth }: PageProps) {
   const [open, setOpen] = React.useState(false);
   const [file, setFile] = React.useState<File | null>(null);
+  const [state, setState] = React.useState<'uploading' | 'success' | 'error' | null>(null)
+  const { data, setData, post, processing, errors, reset } = useForm<{file: File | null}>({
+      file: null
+  });
   const onChange: React.FormEventHandler<HTMLInputElement> = (event) => {
     const files = event.currentTarget.files;
     if (files === null) {
@@ -30,26 +34,32 @@ export default function CreateList({ auth }: PageProps) {
     setOpen(true);
     
   }
-  const handleClose = () => setOpen(false);
+  const handleClose = () => {
+    setOpen(false)
+    setState(null)
+  };
 
-  const uploadFile = () => {
-    if (file === null) {
-      return;
-    }
-    const formData = new FormData();
-    formData.append('file', file);
-    fetch('/api/upload', {
-      headers: {
-        'Content-Type': 'multipart/form-data'
-      },
-      body: formData,
-      method: 'POST'
-    }).then((res) => {
-      console.log(res);
-      setOpen(false);
-    }).catch((err) => {
-      console.log(err);
-    })
+  async function handleUpload() {
+    if(!file) return
+    setData('file', file)
+    post(route('upload'))
+    // try {
+    //     const response = await fetch('/api/upload', {
+    //         method: 'POST',
+    //         body: formData,
+    //     });
+
+    //     if (!response.ok) {
+    //       setState('error')
+    //       throw new Error('Network response was not ok');
+    //     }
+
+    //     const data = await response.json();
+    //     setState('success')
+    // } catch (error) {
+    //     console.error('Error uploading file:', error);
+    //     setState('error')
+    // }
   }
   
   return (
@@ -59,8 +69,8 @@ export default function CreateList({ auth }: PageProps) {
     >
       <Head title="CreateList" />
 
-      <Container>
-        <h2>従業員リスト(csv)</h2>
+      <Container className='py-12'>
+        <h2 className='mb-4'>従業員リスト(csv)をアップロードしてください。</h2>
         <Button
           component="label"
           variant="contained"
@@ -68,7 +78,7 @@ export default function CreateList({ auth }: PageProps) {
           href="#file-upload"
         >
           アップロード
-          <VisuallyHiddenInput onChange={onChange} type="file" />
+          <VisuallyHiddenInput onChange={onChange} type="file" accept='.csv,.txt' />
         </Button>
       </Container>
       <Modal
@@ -78,15 +88,41 @@ export default function CreateList({ auth }: PageProps) {
         className='flex justify-center items-center'
       >
         <Box className='p-4 bg-white' sx={{background: '#fcfcfc'}}>
-          <h2>「{file?.name}」をアップロードしますか？</h2>
-          <div className='mt-4 flex justify-end'>
-            <div className='pr-4'>
-              <Button variant="contained" onClick={uploadFile}>アップロード</Button>
-            </div>
+          {state === null && (
             <div>
-              <Button color='error' className='pr-4' variant="contained" onClick={handleClose}>キャンセル</Button>
+              <h2>「{file?.name}」をアップロードしますか？</h2>
+              <div className='mt-4 flex justify-end'>
+                <div className='pr-4'>
+                  <Button variant="contained" onClick={handleUpload} disabled={processing}>アップロード</Button>
+                </div>
+                <div>
+                  <Button color='error' className='pr-4' variant="contained" onClick={handleClose} disabled={processing}>キャンセル</Button>
+                </div>
+              </div>
             </div>
-          </div>
+          )}
+          {state === 'success' && (
+            <div>
+              <h2>アップロードしましたが完了しました</h2>
+              <div className='mt-4 flex justify-end'>
+                <div>
+                  <Button variant="contained" onClick={handleClose}>
+                    <Link href={route('dashboard')} onClick={handleClose}>ダッシュボードへ</Link>
+                  </Button>
+                </div>
+              </div>
+            </div>
+          )}
+          {state === 'error' && (
+            <div>
+              <h2>アップロードに失敗しました</h2>
+              <div className='mt-4 flex justify-end'>
+                <div>
+                  <Button color='error' className='pr-4' variant="contained" onClick={handleClose}>閉じる</Button>
+                </div>
+              </div>
+            </div>
+          )}
         </Box>
       </Modal>
     </AuthenticatedLayout>
