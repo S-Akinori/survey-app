@@ -23,7 +23,7 @@ class ClientAdminSeeder extends Seeder
           'email' => 'abc@abc.com',
           'password' => Hash::make('abcd1234'),
           'start_date' => Carbon::parse('2023-09-01'),
-          'end_date' => Carbon::parse('2024-09-01'),
+          'end_date' => Carbon::parse('2023-09-10'),
         ]);
     }
 }
