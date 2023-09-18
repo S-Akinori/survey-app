@@ -37,7 +37,7 @@ class FormSeeder extends Seeder
       'title' => '自社や自組織を体現している人の特徴についてお伺いします',
       'description' => '',
       'status' => 'draft',
-    ]
+    ];
 
     DB::table('forms')->insert($forms);
   }
