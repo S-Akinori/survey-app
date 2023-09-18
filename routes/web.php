@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\AdminLoginController;
 use App\Http\Controllers\Admin\AdminSurveyController;
 use App\Http\Controllers\Admin\RegisteredAdminController;
+use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Client\ClientAuthenticatedSessionController;
 use App\Http\Controllers\Client\ClientClientSurveyController;
 use App\Http\Controllers\Client\ClientController;
@@ -65,6 +66,11 @@ Route::post('/admin/login', [AdminLoginController::class, 'store'])->name('admin
 Route::post('/admin/logout', [AdminLoginController::class, 'destroy'])->name('admin.logout');
 
 Route::middleware('auth:admin')->group(function() {
+  Route::get('register', [RegisteredUserController::class, 'create'])
+                ->name('admin.client.register');
+
+  Route::post('register', [RegisteredUserController::class, 'store']);
+
   Route::get('/admin', [AdminController::class, 'index'])->name('admin.index');
   Route::get('/admin/clientAdmin/create', [AdminClientAdminController::class, 'create'])->name('admin.clientAdmin.create');
   Route::post('/admin/clientAdmin/create', [AdminClientAdminController::class, 'store'])->name('admin.clientAdmin.store');
