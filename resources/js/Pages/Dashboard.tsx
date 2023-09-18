@@ -6,19 +6,6 @@ import Box from '@/Components/Box';
 import { Container, FormControl, FormControlLabel, FormLabel, Paper, Radio, RadioGroup, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 import Button from '@/Components/Button';
 
-function createData(
-  id: string,
-  state: string
-) {
-  return { id, state };
-}
-
-const rows = [
-  createData('00000', '済'),
-  createData('00001', '未回答'),
-  createData('00002', '済'),
-];
-
 interface Client {
   id: string;
   client_id: string;
@@ -67,7 +54,7 @@ export default function Dashboard({ auth, clientData }: Props) {
           <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div className='flex items-center'>
               <div className='flex items-center px-4'>
-                <div className='pr-2 font-bold'>回答状況</div>
+                <div className='pr-2 font-bold bg-violet-500'>回答状況</div>
                 <Box>20%</Box>
               </div>
               <div className='flex items-center px-4'>

@@ -27,7 +27,7 @@ export default function Register() {
     };
 
     return (
-        <GuestLayout>
+        <GuestLayout title='クライアント管理者登録'>
             <Head title="Register" />
 
             <form onSubmit={submit}>

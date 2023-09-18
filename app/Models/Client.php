@@ -5,7 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Client extends Model
+use Illuminate\Foundation\Auth\User as Authenticatable;
+
+
+class Client extends Authenticatable
 {
     use HasFactory;
 
@@ -15,8 +18,12 @@ class Client extends Model
     // マスアサインメントを避けるためにfillableまたはguardedを使用
     // この例ではfillableを使用
     protected $fillable = [
-        'client_id', 'client_admin_id', 'created_at', 'updated_at'
+        'client_id', 'name', 'password', 'client_admin_id', 'created_at', 'updated_at'
     ];
+
+    protected $hidden = [
+      'password',
+  ];
 
     // created_atとupdated_atカラムのデフォルトの型はdatetimeですが、
     // もしカスタムのフォーマットが必要な場合は以下のように$castsプロパティを使用します。
@@ -24,4 +31,9 @@ class Client extends Model
     //     'created_at' => 'datetime:Y-m-d H:i:s',
     //     'updated_at' => 'datetime:Y-m-d H:i:s',
     // ];
+
+    public function getAuthIdentifierName()
+    {
+        return 'client_id';
+    }
 }

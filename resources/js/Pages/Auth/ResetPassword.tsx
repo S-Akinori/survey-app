@@ -27,7 +27,7 @@ export default function ResetPassword({ token, email }: { token: string, email: 
     };
 
     return (
-        <GuestLayout>
+        <GuestLayout title='パスワード再設定'>
             <Head title="Reset Password" />
 
             <form onSubmit={submit}>

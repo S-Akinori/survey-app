@@ -16,3 +16,18 @@ const Box = ({ className = "", children, ...props }: HTMLAttributes<HTMLDivEleme
 };
 
 export default Box;
+
+export const BorderBox = ({ className = "", children, ...props }: HTMLAttributes<HTMLDivElement>) => {
+  return (
+    <div
+      {...props}
+      className={
+        `border-2 border-main px-4 py-2 ${
+          className
+        }`
+      }
+    >
+      {children}
+    </div>
+  );
+}

@@ -46,6 +46,14 @@ return [
           'provider' => 'users',
           'hash' => false,
         ],
+        'client' => [
+          'driver' => 'session',
+          'provider' => 'clients',
+        ],
+        'admin' => [
+          'driver' => 'session',
+          'provider' => 'admins',
+        ],
     ],
 
     /*
@@ -75,6 +83,14 @@ return [
         //     'driver' => 'database',
         //     'table' => 'users',
         // ],
+        'clients' => [
+          'driver' => 'eloquent',
+          'model' => App\Models\Client::class,
+        ],
+        'admins' => [
+          'driver' => 'eloquent',
+          'model' => App\Models\Admin::class,
+        ],
     ],
 
     /*
