@@ -32,7 +32,6 @@ class QuestionSeeder extends Seeder
             'title' => '【Q'.($j+1).'】'. $titles[$i],
             'type' => 'scale',
             'status' => 'draft',
-            'required' => 'true',
           ];
         }
       }
