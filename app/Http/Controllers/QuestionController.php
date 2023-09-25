@@ -43,7 +43,6 @@ class QuestionController extends Controller
         'description' => $request->description,
         'type' => $request->type,
         'status' => 'draft',
-        'required' => 'true',
       ]);
 
       if($request->type === 'scale') {
