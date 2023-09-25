@@ -21,7 +21,7 @@ const FormIndex = ({ forms, auth }: Props) => {
   return (
     <AdminAuthenticatedLayout
       user={auth.user}
-      header={<h2 className="font-semibold text-xl text-gray-800 leading-tight">{auth.user.name}</h2>}
+      header={<h2 className="font-semibold leading-tight">{auth.user.name}</h2>}
     >
       <Container className="py-14">
         <Title title="フォーム一覧" Tag="h2" className="bg-main text-main-cont p-4 mb-4" />

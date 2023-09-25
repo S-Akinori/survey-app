@@ -100,7 +100,7 @@ export default function Dashboard({ auth }: PageProps) {
   return (
     <AdminAuthenticatedLayout
       user={auth.user}
-      header={<h2 className="font-semibold text-xl text-gray-800 leading-tight">{auth.user.name}</h2>}
+      header={<h2 className="font-semibold leading-tight">{auth.user.name}</h2>}
     >
       <Head title="管理者ページ" />
 

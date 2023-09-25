@@ -10,6 +10,7 @@ use App\Http\Controllers\Client\ClientAuthenticatedSessionController;
 use App\Http\Controllers\Client\ClientClientSurveyController;
 use App\Http\Controllers\Client\ClientController;
 use App\Http\Controllers\Client\ClientLoginController;
+use App\Http\Controllers\Client\ClientSurveyController;
 use App\Http\Controllers\FormController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\QuestionController;
@@ -42,6 +43,7 @@ Route::get('/dashboard', [ClientController::class, 'index'])->middleware(['auth'
 Route::get('/create-list', function () {
     return Inertia::render('CreateList');
 })->middleware(['auth', 'verified'])->name('create-list');
+Route::post('/clients-download', [ClientController::class, 'download'])->name('download');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -57,11 +59,16 @@ Route::post('/client/login', [ClientLoginController::class, 'store'])->name('cli
 Route::post('/client/logout', [ClientLoginController::class, 'destroy'])->name('client.logout');
 
 Route::middleware('auth:client')->group(function() {
-  Route::get('/client/survey/{client_admin_id}', [SurveyController::class, 'showByAdminId'])->name('client.survey.show');
+  Route::get('/client/survey/{id}', [ClientSurveyController::class, 'show'])->name('client.survey.show');
+  Route::post('/client/survey/{survey_id}', [ClientSurveyController::class, 'store'])->name('client.survey.store');
+  Route::put('/client/survey/{survey_id}', [ClientSurveyController::class, 'update'])->name('client.survey.update');
+  Route::get('/client/thanks', function() {
+    return Inertia::render('Client/Thanks');
+  })->name('client.thanks');
 });
 
 // Admin Auth
-Route::get('/admin/login', [AdminLoginController::class, 'create'])->name('admin.login');
+Route::get('/admin/login', [AdminLoginController::class, 'create'])->middleware('admin.redirect')->name('admin.login');
 Route::post('/admin/login', [AdminLoginController::class, 'store'])->name('admin.login.store');
 Route::post('/admin/logout', [AdminLoginController::class, 'destroy'])->name('admin.logout');
 
@@ -69,25 +76,31 @@ Route::middleware('auth:admin')->group(function() {
   Route::get('register', [RegisteredUserController::class, 'create'])
                 ->name('admin.client.register');
 
-  Route::post('register', [RegisteredUserController::class, 'store']);
+  Route::post('register', [RegisteredUserController::class, 'store'])->name('admin.client.register');
+
+  Route::get('/admin/users', [AdminClientAdminController::class, 'index'])->name('admin.users.index');
+
+  Route::get('/admin/users/{id}', [AdminClientAdminController::class, 'show'])->name('admin.users.show');
+  Route::get('/admin/surveys/{id}', [AdminSurveyController::class, 'show'])->name('admin.survey.show');
+  Route::get('/admin/surveys/{survey_id}/forms/create', [FormController::class, 'create'])->name('admin.form.create');
+  Route::post('/admin/surveys/{survey_id}/forms/create', [FormController::class, 'store'])->name('admin.form.store');
 
   Route::get('/admin', [AdminController::class, 'index'])->name('admin.index');
   Route::get('/admin/clientAdmin/create', [AdminClientAdminController::class, 'create'])->name('admin.clientAdmin.create');
   Route::post('/admin/clientAdmin/create', [AdminClientAdminController::class, 'store'])->name('admin.clientAdmin.store');
-  Route::get('/admin/clientAdmin/{client_admin_id}/surveys', [AdminSurveyController::class, 'index'])->name('admin.survey.index');
 
   Route::get('/admin/forms', [FormController::class, 'index'])->name('admin.form.index');
   Route::get('/admin/forms/{id}', [FormController::class, 'show'])->name('admin.form.show');
   Route::get('/admin/forms/{id}/edit', [FormController::class, 'edit'])->name('admin.form.edit');
-  Route::get('/admin/forms/create/{client_admin_id?}', [FormController::class, 'create'])->name('admin.form.create');
-  Route::post('/admin/forms/create/{client_admin_id?}', [FormController::class, 'store'])->name('admin.form.store');
   Route::put('/admin/forms/{id}', [FormController::class, 'update'])->name('admin.form.update');
+  Route::delete('/admin/forms/{id}', [FormController::class, 'destroy'])->name('admin.form.destroy');
 
   Route::get('/admin/questions/show/{id}', [QuestionController::class, 'show'])->name('admin.question.show');
   Route::get('/admin/forms/{form_id}/questions/create', [QuestionController::class, 'create'])->name('admin.question.create');
   Route::post('/admin/forms/{form_id}/questions/create', [QuestionController::class, 'store'])->name('admin.question.store');
   Route::get('/admin/questions/{id}/edit', [QuestionController::class, 'edit'])->name('admin.question.edit');
   Route::put('/admin/questions/{id}', [QuestionController::class, 'update'])->name('admin.question.update');
+  Route::delete('/admin/questions/{id}', [QuestionController::class, 'destroy'])->name('admin.question.destroy');
 });
 
 // Route::middleware('guest:admin')->group(function () {

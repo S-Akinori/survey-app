@@ -2,7 +2,7 @@ import React from "react";
 
 import AdminAuthenticatedLayout from "../../Layouts/AdminAuthenticatedLayout";
 import { PageProps } from '@/types';
-import { Container, FormControl, FormControlLabel, Radio, RadioGroup, TextField } from "@mui/material";
+import { Container, FormControl, FormControlLabel, InputLabel, MenuItem, Radio, RadioGroup, Select, TextField } from "@mui/material";
 import { Question } from "../../types/Question";
 import { Link } from "@inertiajs/react";
 import Box, { BorderBox } from "@/Components/Box";
@@ -19,7 +19,7 @@ const QuestionShow = ({ question, auth }: Props) => {
   return (
     <AdminAuthenticatedLayout
       user={auth.user}
-      header={<h2 className="font-semibold text-xl text-gray-800 leading-tight">{auth.user.name}</h2>}
+      header={<h2 className="font-semibold leading-tight">{auth.user.name}</h2>}
     >
       <Container className="py-12">
         <div className="mb-4">
@@ -94,6 +94,24 @@ const QuestionShow = ({ question, auth }: Props) => {
               multiline
               rows={4}
             />
+          </div>
+        )}
+        {question.type === 'dropdown' &&  (
+          <div>
+            <FormControl fullWidth>
+              {/* <InputLabel id='type'></InputLabel> */}
+              <Select
+                labelId='type'
+                id='type'
+                name='type'
+                defaultValue={question.choices && question.choices[0].value}
+                // label="質問タイプ"
+              >
+                {question.choices && question.choices.map((choice, index) => (
+                  <MenuItem key={choice.id} value={choice.value}>{choice.title}</MenuItem>
+                ))}
+              </Select>
+            </FormControl>
           </div>
         )}
         <div className="mt-4 text-center">

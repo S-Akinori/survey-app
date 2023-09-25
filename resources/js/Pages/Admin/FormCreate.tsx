@@ -1,14 +1,15 @@
 import React, { FormEventHandler, useEffect, useState } from 'react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, Link, useForm } from '@inertiajs/react';
-import { PageProps } from '@/types';
+import { PageProps, User } from '@/types';
 import Box from '@/Components/Box';
-import { Container, FormControl, InputLabel, MenuItem, Select } from '@mui/material';
+import { Container, FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material';
 import Button from '@/Components/Button';
 import AdminAuthenticatedLayout from '../../Layouts/AdminAuthenticatedLayout';
 import TextInput from '@/Components/TextInput';
 import InputError from '@/Components/InputError';
 import { ClientAdmin } from '../../types/ClientAdmin';
+import { Survey } from '@/types/Survey';
 
 interface InputNameProps {
   title: string;
@@ -17,62 +18,61 @@ interface InputNameProps {
 
 interface Props {
   auth: PageProps['auth'];
-  clientAdmin: ClientAdmin;
+  survey: Survey;
 }
 
-export default function CommonSurveyCreate({ auth, clientAdmin }: Props) {
+export default function CommonSurveyCreate({ auth, survey }: Props) {
+  console.log(survey)
   const { data, setData, post, processing, errors, reset } = useForm<InputNameProps>({
-    title:'',
-    description:'',
+    title: '',
+    description: '',
   });
 
   const submit: FormEventHandler = (e) => {
     e.preventDefault();
     console.log(data)
-    post(route('admin.form.store'));
+    post(route('admin.form.store', { survey_id: survey.id }));
   };
 
 
   return (
     <AdminAuthenticatedLayout
       user={auth.user}
-      header={<h2 className="font-semibold text-xl text-gray-800 leading-tight">{auth.user.name}</h2>}
+      header={<h2 className="font-semibold leading-tight">{survey.user?.company} | {survey.user?.name} 様</h2>}
     >
-      <Head title="管理者ページ" />
+      <Head title="新規フォーム作成" />
 
       <Container className='py-12'>
         <h2 className='mb-4'>新規フォーム作成</h2>
         <form onSubmit={submit}>
           <div className='mb-4'>
-          <InputLabel id="title">タイトル</InputLabel>
-
-            <TextInput
-              id="title"
+            <TextField
+              id='title'
               type="text"
-              name="title"
+              name='title'
               value={data.title}
-              className="mt-1 block w-full"
-              autoComplete="username"
-              isFocused={true}
+              variant='outlined'
+              label='タイトル'
+              required
               onChange={(e) => setData('title', e.target.value)}
+              fullWidth
             />
 
             <InputError message={errors.title} className="mt-2" />
           </div>
           <div className='mb-4'>
-          <InputLabel id="description">説明文</InputLabel>
-
-            <TextInput
-              id="description"
+            <TextField
+              id='description'
               type="text"
-              name="description"
+              name='description'
               value={data.description}
-              className="mt-1 block w-full"
-              autoComplete="username"
-              isFocused={true}
+              variant='outlined'
+              label='説明文'
               onChange={(e) => setData('description', e.target.value)}
+              multiline
+              rows={3}
+              fullWidth
             />
-
             <InputError message={errors.description} className="mt-2" />
           </div>
           <div className="text-center mt-4">

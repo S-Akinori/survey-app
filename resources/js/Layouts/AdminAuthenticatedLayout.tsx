@@ -10,7 +10,7 @@ export default function AdminAuthenticatedLayout({ user, header, children }: Pro
   const [showingNavigationDropdown, setShowingNavigationDropdown] = useState(false);
 
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen bg-base-cont">
       <nav className="bg-white border-b border-gray-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16">
@@ -25,11 +25,11 @@ export default function AdminAuthenticatedLayout({ user, header, children }: Pro
                 <NavLink href={route('admin.index')} active={route().current('admin.index')}>
                   ダッシュボード
                 </NavLink>
-                <NavLink href={route('admin.clientAdmin.create')} active={route().current('admin.clientAdmin.create')}>
+                <NavLink href={route('admin.client.register')} active={route().current('admin.client.register')}>
                   新規クライアント登録
                 </NavLink>
-                <NavLink href={route('admin.form.index')} active={route().current('admin.form.index')}>
-                  共通設問作成
+                <NavLink href={route('admin.users.index')} active={route().current('admin.users.index')}>
+                  クライアント管理者リスト
                 </NavLink>
               </div>
             </div>
@@ -62,7 +62,7 @@ export default function AdminAuthenticatedLayout({ user, header, children }: Pro
                   </Dropdown.Trigger>
 
                   <Dropdown.Content>
-                    <Dropdown.Link href={route('profile.edit')}>Profile</Dropdown.Link>
+                    {/* <Dropdown.Link href={route('profile.edit')}>Profile</Dropdown.Link> */}
                     <Dropdown.Link href={route('admin.logout')} method="post" as="button">
                       Log Out
                     </Dropdown.Link>
@@ -99,9 +99,15 @@ export default function AdminAuthenticatedLayout({ user, header, children }: Pro
 
         <div className={(showingNavigationDropdown ? 'block' : 'hidden') + ' sm:hidden'}>
           <div className="pt-2 pb-3 space-y-1">
-            <ResponsiveNavLink href={route('dashboard')} active={route().current('dashboard')}>
-              Dashboard
-            </ResponsiveNavLink>
+            <NavLink href={route('admin.index')} active={route().current('admin.index')}>
+              ダッシュボード
+            </NavLink>
+            <NavLink href={route('admin.client.register')} active={route().current('admin.client.register')}>
+              新規クライアント登録
+            </NavLink>
+            <NavLink href={route('admin.users.index')} active={route().current('admin.users.index')}>
+              クライアント管理者リスト
+            </NavLink>
           </div>
 
           <div className="pt-4 pb-1 border-t border-gray-200">
@@ -113,7 +119,7 @@ export default function AdminAuthenticatedLayout({ user, header, children }: Pro
             </div>
 
             <div className="mt-3 space-y-1">
-              <ResponsiveNavLink href={route('profile.edit')}>Profile</ResponsiveNavLink>
+              {/* <ResponsiveNavLink href={route('profile.edit')}>Profile</ResponsiveNavLink> */}
               <ResponsiveNavLink method="post" href={route('logout')} as="button">
                 Log Out
               </ResponsiveNavLink>

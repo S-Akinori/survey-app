@@ -14,8 +14,8 @@ class SurveySheeder extends Seeder
     public function run(): void
     {
       DB::table('surveys')->insert([
-        'client_admin_id' => 1,
-        'title' => 'アンケート',
+        'user_id' => 1,
+        'title' => '共通アンケート',
         'status' => 'draft',
       ]);
     }

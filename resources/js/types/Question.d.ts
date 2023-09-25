@@ -1,3 +1,6 @@
+import { Choice } from "./Choice";
+import { Form } from "./Form";
+
 export interface Question {
   id: string
   name: string;
@@ -12,6 +15,8 @@ export interface Question {
     max: number
     step: number
   }
+  choices?: Choice[]
+  form?: Form
   required?: string;
   created_at?: string;
   updated_at?: string;

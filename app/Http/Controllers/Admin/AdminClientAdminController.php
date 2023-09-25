@@ -5,17 +5,34 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\ClientAdmin;
 use App\Models\Survey;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rules;
 use Inertia\Inertia;
 
 class AdminClientAdminController extends Controller
 {
     //
+
+    public function index() {
+      $users = User::all();
+      return Inertia::render('Admin/ClientAdminIndex', [
+        'users' => $users,
+      ]);
+    }
+
     public function create() {
       return Inertia::render('Admin/ClientAdminCreate');
+    }
+
+    public function show(string $id) {
+      $user = User::with('surveys')->find($id);
+      return Inertia::render('Admin/ClientAdminShow', [
+        'user' => $user,
+      ]);
     }
 
     public function store(Request $request) {
@@ -43,11 +60,11 @@ class AdminClientAdminController extends Controller
       ]);
 
       Survey::create([
-        'client_admin_id' => $client_admin->id,
+        'user_id' => $client_admin->id,
         'title' => 'アンケート',
         'status' => 'draft',
       ]);
 
-      return redirect()->route('admin.survey.index', ['client_admin_id' => $client_admin->id]);
+      return redirect()->route('admin.survey.index');
     }
 }

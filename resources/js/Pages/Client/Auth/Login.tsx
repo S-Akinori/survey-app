@@ -22,7 +22,7 @@ export default function ClientLogin({ status, canResetPassword }: { status?: str
   };
 
   return (
-    <GuestLayout title='クライアントログイン'>
+    <GuestLayout title='Cultivate Survey'>
       <Head title="Log in" />
 
       {status && <div className="mb-4 font-medium text-sm text-green-600">{status}</div>}

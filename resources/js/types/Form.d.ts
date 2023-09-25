@@ -1,4 +1,5 @@
 import { Question } from "./Question";
+import { Survey } from "./Survey";
 
 export interface Form {
     id : number;
@@ -8,6 +9,7 @@ export interface Form {
     url?: string;
     status: string;
     questions: Question[];
+    survey?: Survey
     created_at: string;
     updated_at: string;
 }

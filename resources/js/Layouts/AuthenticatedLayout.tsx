@@ -10,7 +10,7 @@ export default function Authenticated({ user, header, children }: PropsWithChild
   const [showingNavigationDropdown, setShowingNavigationDropdown] = useState(false);
 
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen bg-base-cont">
       <nav className="bg-white border-b border-gray-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16">
@@ -23,10 +23,10 @@ export default function Authenticated({ user, header, children }: PropsWithChild
 
               <div className="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                 <NavLink href={route('dashboard')} active={route().current('dashboard')}>
-                  Dashboard
+                  ダッシュボード
                 </NavLink>
                 <NavLink href={route('create-list')} active={route().current('create-list')}>
-                  従業員リスト作成
+                  従業員リスト登録
                 </NavLink>
               </div>
             </div>
@@ -59,7 +59,7 @@ export default function Authenticated({ user, header, children }: PropsWithChild
                   </Dropdown.Trigger>
 
                   <Dropdown.Content>
-                    <Dropdown.Link href={route('profile.edit')}>Profile</Dropdown.Link>
+                    {/* <Dropdown.Link href={route('profile.edit')}>Profile</Dropdown.Link> */}
                     <Dropdown.Link href={route('logout')} method="post" as="button">
                       Log Out
                     </Dropdown.Link>
@@ -97,20 +97,23 @@ export default function Authenticated({ user, header, children }: PropsWithChild
         <div className={(showingNavigationDropdown ? 'block' : 'hidden') + ' sm:hidden'}>
           <div className="pt-2 pb-3 space-y-1">
             <ResponsiveNavLink href={route('dashboard')} active={route().current('dashboard')}>
-              Dashboard
+              ダッシュボード
+            </ResponsiveNavLink>
+            <ResponsiveNavLink href={route('create-list')} active={route().current('create-list')}>
+              従業員リスト登録
             </ResponsiveNavLink>
           </div>
 
           <div className="pt-4 pb-1 border-t border-gray-200">
-            <div className="px-4">
+            {/* <div className="px-4">
               <div className="font-medium text-base text-gray-800">
                 {user.name}
               </div>
               <div className="font-medium text-sm text-gray-500">{user.email}</div>
-            </div>
+            </div> */}
 
             <div className="mt-3 space-y-1">
-              <ResponsiveNavLink href={route('profile.edit')}>Profile</ResponsiveNavLink>
+              {/* <ResponsiveNavLink href={route('profile.edit')}>Profile</ResponsiveNavLink> */}
               <ResponsiveNavLink method="post" href={route('logout')} as="button">
                 Log Out
               </ResponsiveNavLink>

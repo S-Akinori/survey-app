@@ -17,6 +17,11 @@ class AdminSurveyController extends Controller
       return Inertia::render('Admin/SurveyIndex', ['surveys' => $surveys]);
     }
 
+    public function show(string $id) {
+      $survey = Survey::with(['forms', 'user'])->find($id);
+      return Inertia::render('Admin/SurveyShow', ['survey' => $survey]);
+    }
+
     public function create(string $client_admin_id = null) {
       if(!$client_admin_id) {
         return Inertia::render('Admin/CommonSurveyCreate');

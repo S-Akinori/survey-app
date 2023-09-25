@@ -7,9 +7,9 @@ interface Props {
 
 export default function Guest({title, children}: Props) {
     return (
-        <div className="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-gray-100">
+        <div className="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-base-cont">
             <div className='text-center'>
-              <ApplicationLogo className='mx-auto' />
+              <ApplicationLogo className='mx-auto mb-4' />
               <h2 className='mt-4 text-lg font-bold text-main'>{title}</h2>
             </div>
 

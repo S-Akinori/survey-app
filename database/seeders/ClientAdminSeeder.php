@@ -17,11 +17,11 @@ class ClientAdminSeeder extends Seeder
     {
         //
         DB::table('client_admins')->insert([
-          'company' => '株式会社ABC',
+          'company' => '共通質問用',
           'department' => '本部',
-          'name' => '山田太郎',
-          'email' => 'abc@abc.com',
-          'password' => Hash::make('abcd1234'),
+          'name' => '管理者',
+          'email' => 'admin@admin.com',
+          'password' => Hash::make('admin1234'),
           'start_date' => Carbon::parse('2023-09-01'),
           'end_date' => Carbon::parse('2023-09-10'),
         ]);

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Client;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
+use App\Models\Survey;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -22,7 +23,10 @@ class ClientAuthenticatedSessionController extends Controller
     $credentials = $request->only(['client_id']);
 
     if (Auth::guard('client')->attempt($credentials)) {
-        return redirect()->route('survey.index');
+      $client = Auth::guard('client')->user();
+      $user_id = $client->user_id;
+      $survey_id = Survey::where('user_id', $user_id)->first()->id;
+      return redirect()->route('client.survey.show', ['survey_id' => $survey_id]);
     }
 
     return back()->withErrors([

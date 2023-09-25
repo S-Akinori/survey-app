@@ -2,38 +2,49 @@ import React from "react";
 
 import AdminAuthenticatedLayout from "../../Layouts/AdminAuthenticatedLayout";
 import { PageProps } from '@/types';
-import { Container, TextField } from "@mui/material";
+import { Box, Container, FormControl, MenuItem, Modal, Select, TextField } from "@mui/material";
 import { Question } from "../../types/Question";
-import { Link } from "@inertiajs/react";
+import { Link, router } from "@inertiajs/react";
 import Button from "@/Components/Button";
 import Title from "@/Components/Title";
 import QuestionScale from "@/Components/QuestionScale";
+import { Form } from "@/types/Form";
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 interface Props {
   auth: PageProps['auth'];
   form: Form;
 }
 
-interface Form {
-  id: number;
-  title: string;
-  description: string;
-  questions: Question[];
-}
-
 const FormShow = ({ form, auth }: Props) => {
-  console.log(form)
+  const [open, setOpen] = React.useState(false);
+  const [targetId, setTargetId] = React.useState(0);
+
+  const handleOpen = (e: React.MouseEvent<HTMLButtonElement>) => {
+    setTargetId(Number(e.currentTarget.value))
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setTargetId(0)
+    setOpen(false);
+  };
+
   return (
     <AdminAuthenticatedLayout
       user={auth.user}
-      header={<h2 className="font-semibold text-xl text-gray-800 leading-tight">{auth.user.name}</h2>}
+      header={<h2 className="font-semibold leading-tight">{form.survey?.user?.company} | {form.survey?.user?.name} 様</h2>}
     >
       <Container className="py-12">
+        {form.survey && (
+          <div className="mb-4">
+            <Link href={route('admin.survey.show', { id: form.survey?.id })}><ArrowBackIcon />フォーム一覧へ</Link>
+          </div>
+          )}
         <div className="mb-4">
           <Title title={form.title} Tag="h2" className="bg-main text-main-cont p-4 mb-4" />
         </div>
         <div className="mb-4">
-          <div>【説明文】</div>
           <div>{form.description}</div>
         </div>
         <div className="mb-4">
@@ -75,8 +86,31 @@ const FormShow = ({ form, auth }: Props) => {
                   />
                 </div>
               )}
-              <div className="mt-4">
-                <Button><Link href={route('admin.question.edit', { id: question.id })}>質問編集</Link></Button>
+              {question.type === 'dropdown' && (
+                <div>
+                  <FormControl fullWidth>
+                    {/* <InputLabel id='type'></InputLabel> */}
+                    <Select
+                      labelId='type'
+                      id='type'
+                      name='type'
+                      defaultValue={question.choices && question.choices[0].value}
+                    // label="質問タイプ"
+                    >
+                      {question.choices && question.choices.map((choice, index) => (
+                        <MenuItem key={choice.id} value={choice.value}>{choice.title}</MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </div>
+              )}
+              <div className="flex">
+                <div className="mt-4 px-2">
+                  <Button><Link href={route('admin.question.edit', { id: question.id })}>質問編集</Link></Button>
+                </div>
+                <div className="mt-4 px-2">
+                  <Button className="bg-red-500 text-white" onClick={handleOpen} value={question.id}>質問削除</Button>
+                </div>
               </div>
             </div>
           ))}
@@ -92,6 +126,22 @@ const FormShow = ({ form, auth }: Props) => {
         <div className="mb-4">
           <Button><Link href={route('admin.question.create', { form_id: form.id })}>質問新規作成</Link></Button>
         </div>
+        <Modal
+          open={open}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
+          className='flex justify-center items-center'
+        >
+          <Box className='p-4 bg-white' sx={{ background: '#fcfcfc' }}>
+            <div>
+              <h2>削除してよろしいですか？</h2>
+              <div className='mt-4 flex justify-end'>
+                <Button className="mr-4"><Link method="delete" href={route('admin.question.destroy', { id: targetId })}>はい</Link></Button>
+                <Button className="bg-red-500 text-white" onClick={handleClose}>キャンセル</Button>
+              </div>
+            </div>
+          </Box>
+        </Modal>
       </Container>
     </AdminAuthenticatedLayout>
   );

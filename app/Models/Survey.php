@@ -10,7 +10,7 @@ class Survey extends Model
   use HasFactory;
 
   protected $fillable = [
-    'client_admin_id',
+    'user_id',
     'title',
     'description',
     'status',
@@ -26,5 +26,11 @@ class Survey extends Model
   public function forms()
   {
     return $this->hasMany(Form::class);
+  }
+  public function user() {
+    return $this->belongsTo(User::class);
+  }
+  public function responses() {
+    return $this->hasMany(Response::class);
   }
 }

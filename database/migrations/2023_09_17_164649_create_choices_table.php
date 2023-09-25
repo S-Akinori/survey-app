@@ -14,7 +14,6 @@ return new class extends Migration
     Schema::create('choices', function (Blueprint $table) {
       $table->id();
       $table->foreignId('question_id')->constrained()->onDelete('cascade');
-      $table->string('name');
       $table->string('title');
       $table->string('value');
       $table->integer('order');

@@ -13,15 +13,14 @@ export default function Dashboard({ auth }: PageProps) {
   return (
     <AdminAuthenticatedLayout
       user={auth.user}
-      header={<h2 className="font-semibold text-xl text-gray-800 leading-tight">{auth.user.name}</h2>}
+      header={<h2 className="font-semibold leading-tight">{auth.user.name}</h2>}
     >
       <Head title="管理者ページ" />
 
       <Container className='py-12'>
         <div>
-          <div className='mb-4'><Button><Link href={route('admin.clientAdmin.create')}>新規クライアント登録</Link></Button></div>
-          <div><Button><Link href={route('admin.clientAdmin.create')}>登録クライアントリスト</Link></Button></div>
-          <div><Button><Link href={route('admin.form.index')}>フォーム一覧</Link></Button></div>
+          <div className='mb-4'><Button><Link href={route('admin.client.register')}>新規クライアント登録</Link></Button></div>
+          <div><Button><Link href={route('admin.users.index')}>登録クライアントリスト</Link></Button></div>
         </div>
       </Container>
     </AdminAuthenticatedLayout>

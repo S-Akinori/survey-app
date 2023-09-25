@@ -10,7 +10,6 @@ class Question extends Model
     use HasFactory;
     protected $fillable = [
       'form_id',
-      'name',
       'title',
       'description',
       'type',
@@ -30,5 +29,11 @@ class Question extends Model
     }
     public function form() {
       return $this->belongsTo(Form::class);
+    }
+    public function choices() {
+      return $this->hasMany(Choice::class)->orderBy('order', 'asc');
+    }
+    public function answers() {
+      return $this->hasMany(Answer::class);
     }
 }

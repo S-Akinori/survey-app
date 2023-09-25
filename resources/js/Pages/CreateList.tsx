@@ -2,7 +2,7 @@ import React from 'react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, Link, useForm } from '@inertiajs/react';
 import { PageProps } from '@/types';
-import { Box, Button, Container, Modal, styled } from '@mui/material';
+import { Box, Button, Container, Modal, Table, TableBody, TableCell, TableHead, TableRow, styled } from '@mui/material';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
 const VisuallyHiddenInput = styled('input')`
@@ -19,10 +19,9 @@ const VisuallyHiddenInput = styled('input')`
 
 export default function CreateList({ auth }: PageProps) {
   const [open, setOpen] = React.useState(false);
-  const [file, setFile] = React.useState<File | null>(null);
   const [state, setState] = React.useState<'uploading' | 'success' | 'error' | null>(null)
-  const { data, setData, post, processing, errors, reset } = useForm<{file: File | null}>({
-      file: null
+  const { data, setData, post, processing, errors, reset } = useForm<{ file: File | null }>({
+    file: null
   });
   const onChange: React.FormEventHandler<HTMLInputElement> = (event) => {
     const files = event.currentTarget.files;
@@ -30,9 +29,10 @@ export default function CreateList({ auth }: PageProps) {
       return;
     }
     const file = files[0];
-    setFile(file)
-    setOpen(true);
     
+    setData('file', file)
+    setOpen(true);
+
   }
   const handleClose = () => {
     setOpen(false)
@@ -40,37 +40,51 @@ export default function CreateList({ auth }: PageProps) {
   };
 
   async function handleUpload() {
-    if(!file) return
-    setData('file', file)
+    if (!data.file) {
+      setState('error');
+      return
+    }
     post(route('upload'))
-    // try {
-    //     const response = await fetch('/api/upload', {
-    //         method: 'POST',
-    //         body: formData,
-    //     });
-
-    //     if (!response.ok) {
-    //       setState('error')
-    //       throw new Error('Network response was not ok');
-    //     }
-
-    //     const data = await response.json();
-    //     setState('success')
-    // } catch (error) {
-    //     console.error('Error uploading file:', error);
-    //     setState('error')
-    // }
   }
-  
+
   return (
     <AuthenticatedLayout
       user={auth.user}
-      header={<h2 className="font-semibold text-xl text-gray-800 leading-tight">{auth.user.name}</h2>}
+      header={<h2 className="font-semibold leading-tight">{auth.user.name}</h2>}
     >
-      <Head title="CreateList" />
+      <Head title="従業員リスト登録" />
 
       <Container className='py-12'>
         <h2 className='mb-4'>従業員リスト(csv)をアップロードしてください。</h2>
+        <div className='mb-8'>
+          <p className='mb-4'>以下のような形式のcsvファイルをアップロードしてください。</p>
+          <Table aria-label="simple table" sx={{width: 400}}>
+            <TableHead>
+              <TableRow>
+                <TableCell className='bg-gray-300'></TableCell>
+                <TableCell className='bg-gray-300'>A</TableCell>
+                <TableCell className='bg-gray-300'>B</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              <TableRow sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+                <TableCell scope="row" className='bg-gray-300'>1</TableCell>
+                <TableCell>タイムスタンプ</TableCell>
+                <TableCell>ID</TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell scope="row" className='bg-gray-300'>2</TableCell>
+                <TableCell>7/7/2023 21:09:03</TableCell>
+                <TableCell>R0151000</TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell scope="row" className='bg-gray-300'>3</TableCell>
+                <TableCell>7/10/2023 12:43:01</TableCell>
+                <TableCell>R0151001</TableCell>
+              </TableRow>
+            </TableBody>
+          </Table>
+        </div>
         <Button
           component="label"
           variant="contained"
@@ -87,10 +101,10 @@ export default function CreateList({ auth }: PageProps) {
         aria-describedby="modal-modal-description"
         className='flex justify-center items-center'
       >
-        <Box className='p-4 bg-white' sx={{background: '#fcfcfc'}}>
+        <Box className='p-4 bg-white' sx={{ background: '#fcfcfc' }}>
           {state === null && (
             <div>
-              <h2>「{file?.name}」をアップロードしますか？</h2>
+              <h2>「{data.file?.name}」をアップロードしますか？</h2>
               <div className='mt-4 flex justify-end'>
                 <div className='pr-4'>
                   <Button variant="contained" onClick={handleUpload} disabled={processing}>アップロード</Button>

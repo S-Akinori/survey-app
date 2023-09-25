@@ -1,117 +1,170 @@
-import { useEffect, FormEventHandler } from 'react';
+import React, { useEffect, FormEventHandler } from 'react';
 import GuestLayout from '@/Layouts/GuestLayout';
 import InputError from '@/Components/InputError';
-import InputLabel from '@/Components/InputLabel';
+import InputLabel from '@mui/material/InputLabel';
 import PrimaryButton from '@/Components/PrimaryButton';
 import TextInput from '@/Components/TextInput';
 import { Head, Link, useForm } from '@inertiajs/react';
+import AdminAuthenticatedLayout from '@/Layouts/AdminAuthenticatedLayout';
+import { PageProps } from '@/types';
+import { Container, FormControl, IconButton, InputAdornment, OutlinedInput, TextField } from '@mui/material';
+import Button from '@/Components/Button';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
 
-export default function Register() {
-    const { data, setData, post, processing, errors, reset } = useForm({
-        name: '',
-        email: '',
-        password: '',
-        password_confirmation: '',
-    });
+const inputs: InputProps[] = [
+  {
+    id: 'company',
+    name: 'company',
+    type: 'text',
+    label: '会社名',
+  },
+  {
+    id: 'department',
+    name: 'department',
+    type: 'text',
+    label: '部署名',
+  },
+  {
+    id: 'name',
+    name: 'name',
+    type: 'text',
+    label: '担当者名',
+  },
+  {
+    id: 'email',
+    name: 'email',
+    type: 'text',
+    label: '担当者ID(メールアドレス)',
+  },
+  {
+    id: 'password',
+    name: 'password',
+    type: 'password',
+    label: 'パスワード',
+  },
+  {
+    id: 'start_date',
+    name: 'start_date',
+    type: 'date',
+    label: '開始日',
+  },
+  {
+    id: 'end_date',
+    name: 'end_date',
+    type: 'date',
+    label: '終了日',
+  },
+]
 
-    useEffect(() => {
-        return () => {
-            reset('password', 'password_confirmation');
-        };
-    }, []);
+interface InputProps {
+  id: string;
+  name: 'company' | 'department' | 'name' | 'email' | 'password' | 'start_date' | 'end_date';
+  type: string;
+  label: string;
+}
 
-    const submit: FormEventHandler = (e) => {
-        e.preventDefault();
+interface InputNameProps {
+  company: string;
+  department: string;
+  name: string;
+  email: string;
+  password: string;
+  start_date: string;
+  end_date: string;
+}
 
-        post(route('register'));
+export default function Register({ auth }: PageProps) {
+  const { data, setData, post, processing, errors, reset } = useForm<InputNameProps>({
+    name: '',
+    company: '',
+    department: '',
+    start_date: '2023-10-1',
+    end_date: '2023-11-1',
+    email: '',
+    password: '',
+  });
+
+  useEffect(() => {
+    return () => {
+      reset('password');
     };
+  }, []);
 
-    return (
-        <GuestLayout title='クライアント管理者登録'>
-            <Head title="Register" />
+  const submit: FormEventHandler = (e) => {
+    e.preventDefault();
 
-            <form onSubmit={submit}>
-                <div>
-                    <InputLabel htmlFor="name" value="Name" />
+    post(route('admin.client.register'));
+  };
 
-                    <TextInput
-                        id="name"
-                        name="name"
-                        value={data.name}
-                        className="mt-1 block w-full"
-                        autoComplete="name"
-                        isFocused={true}
-                        onChange={(e) => setData('name', e.target.value)}
-                        required
-                    />
+  const [showPassword, setShowPassword] = React.useState(false);
 
-                    <InputError message={errors.name} className="mt-2" />
-                </div>
+  const handleClickShowPassword = () => setShowPassword((show) => !show);
 
-                <div className="mt-4">
-                    <InputLabel htmlFor="email" value="Email" />
+  const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+  };
 
-                    <TextInput
-                        id="email"
-                        type="email"
-                        name="email"
-                        value={data.email}
-                        className="mt-1 block w-full"
-                        autoComplete="username"
-                        onChange={(e) => setData('email', e.target.value)}
-                        required
-                    />
+  console.log(data)
 
-                    <InputError message={errors.email} className="mt-2" />
-                </div>
+  return (
+    <AdminAuthenticatedLayout
+      user={auth.user}
+      header={<h2 className="font-semibold leading-tight">{auth.user.name}</h2>}
+    >
+      <Head title="Register" />
 
-                <div className="mt-4">
-                    <InputLabel htmlFor="password" value="Password" />
-
-                    <TextInput
-                        id="password"
-                        type="password"
-                        name="password"
-                        value={data.password}
-                        className="mt-1 block w-full"
-                        autoComplete="new-password"
-                        onChange={(e) => setData('password', e.target.value)}
-                        required
-                    />
-
-                    <InputError message={errors.password} className="mt-2" />
-                </div>
-
-                <div className="mt-4">
-                    <InputLabel htmlFor="password_confirmation" value="Confirm Password" />
-
-                    <TextInput
-                        id="password_confirmation"
-                        type="password"
-                        name="password_confirmation"
-                        value={data.password_confirmation}
-                        className="mt-1 block w-full"
-                        autoComplete="new-password"
-                        onChange={(e) => setData('password_confirmation', e.target.value)}
-                        required
-                    />
-
-                    <InputError message={errors.password_confirmation} className="mt-2" />
-                </div>
-
-                <div className="flex items-center justify-end mt-4">
-                    <Link
-                        href={route('login')}
-                        className="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                    >
-                        Already registered?
-                    </Link>
-
-                    <PrimaryButton className="ml-4" disabled={processing}>
-                        Register
-                    </PrimaryButton>
-                </div>
-            </form>
-        </GuestLayout>
-    );
+      <Container className='py-12'>
+        <form onSubmit={submit}>
+          {inputs.map((input) => (
+            <div key={input.id} className="mt-4">
+              {input.type === 'password' && (
+                <FormControl variant="outlined" fullWidth>
+                  <InputLabel htmlFor={input.id}>Password</InputLabel>
+                  <OutlinedInput
+                    id={input.id}
+                    type={showPassword ? 'text' : 'password'}
+                    name={input.name}
+                    value={data[input.name]}
+                    endAdornment={
+                      <InputAdornment position="end">
+                        <IconButton
+                          aria-label="toggle password visibility"
+                          onClick={handleClickShowPassword}
+                          onMouseDown={handleMouseDownPassword}
+                          edge="end"
+                        >
+                          {showPassword ? <VisibilityOff /> : <Visibility />}
+                        </IconButton>
+                      </InputAdornment>
+                    }
+                    label={input.label}
+                    onChange={(e) => setData(input.name, e.target.value)}
+                    fullWidth
+                  />
+                </FormControl>
+              )}
+              {input.type !== 'password' && (
+                <TextField
+                  id={input.id}
+                  type={input.type}
+                  name={input.name}
+                  value={data[input.name]}
+                  variant='outlined'
+                  label={input.label}
+                  onChange={(e) => setData(input.name, e.target.value)}
+                  fullWidth
+                />
+              )}
+              <InputError message={errors[input.name]} className="mt-2" />
+            </div>
+          ))}
+          <div className="text-center mt-4">
+            <Button className="ml-4" disabled={processing}>
+              登録
+            </Button>
+          </div>
+        </form>
+      </Container>
+    </AdminAuthenticatedLayout >
+  );
 }
