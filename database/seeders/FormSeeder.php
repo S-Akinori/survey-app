@@ -38,6 +38,12 @@ class FormSeeder extends Seeder
       'description' => '',
       'status' => 'draft',
     ];
+    $forms[] = [
+      'survey_id' => 1,
+      'title' => '会社が掲げる理念やビジョンや目標、あるいは日頃組織内で交わされている会話において、あなたが最も共感している「言葉」は何ですか？',
+      'description' => '',
+      'status' => 'draft',
+    ];
 
     DB::table('forms')->insert($forms);
   }

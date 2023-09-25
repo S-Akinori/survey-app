@@ -35,6 +35,37 @@ class QuestionSeeder extends Seeder
           ];
         }
       }
+
+      $questions[] = [
+        'form_id' => 7,
+        'title' => '最も自社や自組織らしさを体現していると思う人は誰ですか？3名ほど挙げてみてください。メモ程度で結構です。',
+        'type' => 'text',
+        'status' => 'draft',
+      ];
+      $questions[] = [
+        'form_id' => 7,
+        'title' => '上記で選んだ人たちに共通する要素や特に際立っている特徴は何ですか？ 50文字程度でご記入ください。',
+        'type' => 'textarea',
+        'status' => 'draft',
+      ];
+      $questions[] = [
+        'form_id' => 7,
+        'title' => '上記の要素や特徴にまつわる自社や自組織らしさを示すエピソードを200文字程度でご記入ください。',
+        'type' => 'textarea',
+        'status' => 'draft',
+      ];
+      $questions[] = [
+        'form_id' => 8,
+        'title' => '最も共感している「言葉」',
+        'type' => 'text',
+        'status' => 'draft',
+      ];
+      $questions[] = [
+        'form_id' => 8,
+        'title' => '上記の言葉を選んだ理由を200文字程度でご記入ください。',
+        'type' => 'textarea',
+        'status' => 'draft',
+      ];
       DB::table('questions')->insert($questions);
     }
 }
