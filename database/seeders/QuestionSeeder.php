@@ -29,7 +29,6 @@ class QuestionSeeder extends Seeder
         for($j = 0; $j < 6; $j++) {
           $questions[] = [
             'form_id' => ($i+1),
-            'name' => 'q'.($i+1).'_'.($j+1),
             'title' => '【Q'.($j+1).'】'. $titles[$i],
             'type' => 'scale',
             'status' => 'draft',
