@@ -20,7 +20,7 @@ export default function Dashboard({ auth }: PageProps) {
       <Container className='py-12'>
         <div>
           <div className='mb-4'><Button><Link href={route('admin.client.register')}>新規クライアント登録</Link></Button></div>
-          <div><Button><Link href={route('admin.users.index')}>登録クライアントリスト</Link></Button></div>
+          <div><Button><Link href={route('admin.users.index')}>クライアントリスト</Link></Button></div>
         </div>
       </Container>
     </AdminAuthenticatedLayout>
