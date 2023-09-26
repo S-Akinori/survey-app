@@ -43,7 +43,7 @@ interface Props {
 
 interface InputProps {
   target: string,
-  user_id?: string | number,
+  user_id: string | number,
 }
 
 const calculateRate = (total: number, answerTotal: number) => {
@@ -71,7 +71,7 @@ export default function Dashboard({ auth, clientData, target = 'all', total, ans
   const submit: FormEventHandler = (e) => {
     e.preventDefault();
     console.log(data)
-    get(route('dashboard', { target: data.target }));
+    get(route('dashboard', { target: data.target, user_id: data.user_id }));
   };
   const download = () => {
     const token = document?.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
@@ -96,7 +96,7 @@ export default function Dashboard({ auth, clientData, target = 'all', total, ans
   };
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newData = { 'target': e.target.value }
+    const newData = {...data, 'target': e.target.value }
     setData(newData)
   }
 
