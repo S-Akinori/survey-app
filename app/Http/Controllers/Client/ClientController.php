@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Client;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
@@ -16,13 +17,18 @@ class ClientController extends Controller
 {
   public function index(Request $request)
   {
+    $user = auth()->user();
+    $user_id = $user->id;
+    if ($user->role === 'admin' && $request->user_id) {
+      $user_id = $request->user_id;
+    }
     $query = Client::query();
     if ($request->target === 'answer') {
-      $query->with('responses')->has('responses', '>=', 2);
+      $query->with('responses')->where('user_id', $user_id)->has('responses', '>=', 2);
     } else if ($request->target === 'no-answer') {
-      $query->with('responses')->has('responses', '<', 2);
+      $query->with('responses')->where('user_id', $user_id)->has('responses', '<', 2);
     } else {
-      $query->with('responses');
+      $query->with('responses')->where('user_id', $user_id);
     }
     $clientData = $query->paginate(20);
     $total = Client::count();

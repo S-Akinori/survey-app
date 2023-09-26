@@ -90,7 +90,7 @@ class QuestionController extends Controller
           } else {
             $choice->update([
               'title' => $request->choices[array_search($choice->id, array_column($request->choices, 'id'))]['title'],
-              'value' => $request->choices[array_search($choice->id, array_column($request->choices, 'id'))]['value'],
+              'value' => $request->choices[array_search($choice->id, array_column($request->choices, 'id'))]['value'] ? $request->choices[array_search($choice->id, array_column($request->choices, 'id'))]['value'] : $request->choices[array_search($choice->id, array_column($request->choices, 'id'))]['title'],
               'order' => $request->choices[array_search($choice->id, array_column($request->choices, 'id'))]['order'],
             ]);
             $updatedIds[] = $choice->id;
@@ -100,7 +100,7 @@ class QuestionController extends Controller
           if(!in_array($choice['id'], $updatedIds)) {
             $question->choices()->create([
               'title' => $choice['title'],
-              'value' => $choice['value'],
+              'value' => $choice['value'] ? $choice['value'] : $choice['title'],
               'order' => $choice['order'],
             ]);
           }

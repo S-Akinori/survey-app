@@ -92,7 +92,7 @@ const QuestionEdit = ({ auth, question }: Props) => {
     const id = name?.split('_')[0]
     
     if (!key || !id || !data.choices) return
-    const newChoices = data.choices.map(choice => choice.id == id ? { ...choice, [key]: value } : choice)
+    const newChoices = key === 'title' ? data.choices.map(choice => choice.id == id ? { ...choice, [key]: value, value: value } : choice) :  data.choices.map(choice => choice.id == id ? { ...choice, [key]: value } : choice)
     const newData: InputProps = { ...data, choices: newChoices }
     setData(newData)
   }
@@ -215,14 +215,13 @@ const QuestionEdit = ({ auth, question }: Props) => {
                       />
                       <TextField
                         id={choice.id + '_choice_value'}
-                        type="text"
+                        type="hidden"
                         name={choice.id + '_choice_value'}
                         defaultValue={choice.value}
                         variant='outlined'
                         label='値'
-                        sx={{ mr: 2 }}
+                        sx={{ display: 'none' }}
                         onChange={onChoiceChange}
-                        required
                       />
                       <TextField
                         id={choice.id + '_choice_order'}

@@ -17,11 +17,12 @@ class UserSeeder extends Seeder
   {
     //
     DB::table('users')->insert([
-      'company' => '共通質問管理用',
+      'company' => '管理者',
       'department' => '本部',
-      'name' => '管理者',
-      'email' => 'test@test.com',
-      'password' => Hash::make('test1234'),
+      'name' => 'admin',
+      'email' => 'admin@admin.com',
+      'password' => Hash::make('admin1234'),
+      'role' => 'admin',
       'start_date' => Carbon::parse('2023-09-01'),
       'end_date' => Carbon::parse('2023-09-10'),
     ]);

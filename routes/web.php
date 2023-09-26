@@ -45,7 +45,7 @@ Route::get('/create-list', function () {
 })->middleware(['auth', 'verified'])->name('create-list');
 Route::post('/clients-download', [ClientController::class, 'download'])->name('download');
 
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
@@ -72,7 +72,9 @@ Route::get('/admin/login', [AdminLoginController::class, 'create'])->middleware(
 Route::post('/admin/login', [AdminLoginController::class, 'store'])->name('admin.login.store');
 Route::post('/admin/logout', [AdminLoginController::class, 'destroy'])->name('admin.logout');
 
-Route::middleware('auth:admin')->group(function() {
+Route::middleware('admin')->group(function() {
+  Route::get('/admin', [AdminController::class, 'index'])->name('admin.index');
+  
   Route::get('register', [RegisteredUserController::class, 'create'])
                 ->name('admin.client.register');
 
@@ -84,10 +86,10 @@ Route::middleware('auth:admin')->group(function() {
   Route::get('/admin/surveys/{id}', [AdminSurveyController::class, 'show'])->name('admin.survey.show');
   Route::get('/admin/surveys/{survey_id}/forms/create', [FormController::class, 'create'])->name('admin.form.create');
   Route::post('/admin/surveys/{survey_id}/forms/create', [FormController::class, 'store'])->name('admin.form.store');
-
-  Route::get('/admin', [AdminController::class, 'index'])->name('admin.index');
   Route::get('/admin/clientAdmin/create', [AdminClientAdminController::class, 'create'])->name('admin.clientAdmin.create');
   Route::post('/admin/clientAdmin/create', [AdminClientAdminController::class, 'store'])->name('admin.clientAdmin.store');
+  Route::get('/admin/clientAdmin/{id}/edit', [AdminClientAdminController::class, 'edit'])->name('admin.clientAdmin.edit');
+  Route::put('/admin/clientAdmin/{id}', [AdminClientAdminController::class, 'update'])->name('admin.clientAdmin.update');
 
   Route::get('/admin/forms', [FormController::class, 'index'])->name('admin.form.index');
   Route::get('/admin/forms/{id}', [FormController::class, 'show'])->name('admin.form.show');

@@ -55,16 +55,22 @@ class RegisteredUserController extends Controller
             'password' => Hash::make($request->password),
         ]);
         
-        Survey::create([
+        event(new Registered($user));
+
+        $survey = Survey::create([
           'user_id' => $user->id,
           'title' => 'Key Culture Survey',
           'status' => 'draft',
         ]);
-
-        event(new Registered($user));
+        
+        //フォームを作成
+        $survey->forms()->create([
+          'title' => '事前に以下にご回答ください',
+          'status' => 'draft',
+        ]);
 
         // Auth::login($user);
 
-        return redirect()->route('admin.users.index');
+        return redirect()->route('admin.question.create', ['form_id' => $survey->forms->first()->id]);
     }
 }

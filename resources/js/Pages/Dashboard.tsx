@@ -45,6 +45,11 @@ interface InputProps {
   target: string
 }
 
+const calculateRate = (total: number, answerTotal: number) => {
+  if(total === 0) return 0
+  return Math.floor(answerTotal * 100 / total);
+}
+
 export default function Dashboard({ auth, clientData, target = 'all', total, answerTotal }: Props) {
   console.log(clientData)
   const { data, setData, get, post } = useForm<InputProps>({ target: target });
@@ -106,7 +111,7 @@ export default function Dashboard({ auth, clientData, target = 'all', total, ans
               <div className='flex items-center'>
                 <div className='md:flex items-center px-4 mb-4'>
                   <div className='md:pr-2 font-bold text-center'>回答状況</div>
-                  <Box className='text-center'>{Math.floor(answerTotal * 100 / total)}%</Box>
+                  <Box className='text-center'>{calculateRate(total, answerTotal) !== 0 ? calculateRate(total, answerTotal) : '-'}%</Box>
                 </div>
                 <div className='md:flex items-center px-4 mb-4'>
                   <div className='md:pr-2 font-bold text-center'>回答数</div>

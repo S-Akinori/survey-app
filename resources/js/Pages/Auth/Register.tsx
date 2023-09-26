@@ -160,7 +160,7 @@ export default function Register({ auth }: PageProps) {
           ))}
           <div className="text-center mt-4">
             <Button className="ml-4" disabled={processing}>
-              登録
+              登録して個別質問へ
             </Button>
           </div>
         </form>

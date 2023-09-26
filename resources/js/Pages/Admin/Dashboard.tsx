@@ -8,7 +8,7 @@ import Button from '@/Components/Button';
 import AdminAuthenticatedLayout from '../../Layouts/AdminAuthenticatedLayout';
 
 export default function Dashboard({ auth }: PageProps) {
-
+  console.log(auth.user)
 
   return (
     <AdminAuthenticatedLayout

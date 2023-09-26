@@ -18,7 +18,7 @@ class AdminClientAdminController extends Controller
     //
 
     public function index() {
-      $users = User::all();
+      $users = User::where('id', '!=', 1)->latest()->get();
       return Inertia::render('Admin/ClientAdminIndex', [
         'users' => $users,
       ]);
@@ -26,6 +26,13 @@ class AdminClientAdminController extends Controller
 
     public function create() {
       return Inertia::render('Admin/ClientAdminCreate');
+    }
+
+    public function edit(string $id) {
+      $user = User::find($id);
+      return Inertia::render('Admin/ClientAdminEdit', [
+        'user' => $user,
+      ]);
     }
 
     public function show(string $id) {
@@ -66,5 +73,36 @@ class AdminClientAdminController extends Controller
       ]);
 
       return redirect()->route('admin.survey.index');
+    }
+
+    public function update(Request $request, string $id) {
+
+      $request->validate([
+        'company' => 'required|string|max:255',
+        'department' => 'required|string|max:255',
+        'name' => 'required|string|max:255',
+        'email' => 'required|string|email|max:255',
+        'password' => ['nullable', Rules\Password::defaults()],
+        'start_date' => 'required|date',
+        'end_date' => 'required|date',
+      ]);
+
+      $start_date = Carbon::parse($request->start_date);
+      $end_date = Carbon::parse($request->end_date);
+
+      $user = User::find($id);
+      $user->company = $request->company;
+      $user->department = $request->department;
+      $user->name = $request->name;
+      $user->email = $request->email;
+      if ($request->password) {
+        $user->password = Hash::make($request->password);
+      }
+      $user->start_date = $start_date;
+      $user->end_date = $end_date;
+      $user->save();
+
+      $form = $user->surveys->first()->forms->first();
+      return redirect()->route('admin.form.show', ['id' => $form->id]);
     }
 }

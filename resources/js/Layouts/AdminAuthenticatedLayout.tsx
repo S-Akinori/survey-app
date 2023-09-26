@@ -29,7 +29,10 @@ export default function AdminAuthenticatedLayout({ user, header, children }: Pro
                   新規クライアント登録
                 </NavLink>
                 <NavLink href={route('admin.users.index')} active={route().current('admin.users.index')}>
-                  クライアント管理者リスト
+                  クライアントリスト
+                </NavLink>
+                <NavLink href={route('admin.survey.show', { id: 1 })} active={route().current('admin.survey.show', { id: 1 })}>
+                  共通質問管理
                 </NavLink>
               </div>
             </div>
@@ -106,7 +109,10 @@ export default function AdminAuthenticatedLayout({ user, header, children }: Pro
               新規クライアント登録
             </NavLink>
             <NavLink href={route('admin.users.index')} active={route().current('admin.users.index')}>
-              クライアント管理者リスト
+              クライアントリスト
+            </NavLink>
+            <NavLink href={route('admin.survey.show', { id: 1 })} active={route().current('admin.survey.show', { id: 1 })}>
+              共通質問管理
             </NavLink>
           </div>
 

@@ -63,6 +63,8 @@ export default function QuestionCreate({ auth, form_id, user }: Props) {
     setData(newData)
   }
 
+  console.log(data)
+
   const onScaleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const name = e.target.name
     const value = e.target.value
@@ -86,8 +88,13 @@ export default function QuestionCreate({ auth, form_id, user }: Props) {
     const id = name?.split('_')[0]
 
     if (!key || !id || !data.choices) return
-    const newData: InputProps = { ...data, choices: data.choices.map(choice => choice.id === id ? { ...choice, [key]: value } : choice) }
-    setData(newData)
+    if(key === 'title') {
+      const newData: InputProps = { ...data, choices: data.choices.map(choice => choice.id === id ? { ...choice, [key]: value, value: value } : choice) }
+      setData(newData)
+    } else {
+      const newData: InputProps = { ...data, choices: data.choices.map(choice => choice.id === id ? { ...choice, [key]: value} : choice) }
+      setData(newData)
+    }
   }
 
   const deleteChoice = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -118,6 +125,7 @@ export default function QuestionCreate({ auth, form_id, user }: Props) {
                 label='質問文'
                 onChange={onChange}
                 fullWidth
+                required
               />
             </div>
             {/* <div className='mb-4'>
@@ -156,6 +164,7 @@ export default function QuestionCreate({ auth, form_id, user }: Props) {
                   value={data.type}
                   label="質問タイプ"
                   onChange={onChange}
+                  required
                 >
                   <MenuItem value='text'>一行テキスト</MenuItem>
                   <MenuItem value='textarea'>複数行テキスト</MenuItem>
@@ -218,15 +227,16 @@ export default function QuestionCreate({ auth, form_id, user }: Props) {
                         label='タイトル'
                         sx={{ mr: 2 }}
                         onChange={onChoiceChange}
+                        required
                       />
                       <TextField
                         id={choice.id + '_choice_value'}
-                        type="text"
+                        type="hidden"
                         name={choice.id + '_choice_value'}
-                        value={choice.value}
+                        value={choice.title}
                         variant='outlined'
                         label='値'
-                        sx={{ mr: 2 }}
+                        sx={{ display: 'none' }}
                         onChange={onChoiceChange}
                       />
                       <TextField
@@ -237,6 +247,7 @@ export default function QuestionCreate({ auth, form_id, user }: Props) {
                         variant='outlined'
                         label='順番'
                         onChange={onChoiceChange}
+                        required
                       />
                     </div>
                     <button id={choice.id} name={choice.id} type='button' className='pl-2' onClick={deleteChoice}><DeleteIcon /></button>
