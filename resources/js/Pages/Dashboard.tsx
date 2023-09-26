@@ -1,6 +1,6 @@
 import React, { FormEventHandler, useEffect, useState } from 'react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { Head, Link, useForm } from '@inertiajs/react';
+import { Head, Link, useForm, usePage } from '@inertiajs/react';
 import { PageProps } from '@/types';
 import Box from '@/Components/Box';
 import { Container, FormControl, FormControlLabel, FormLabel, Paper, Radio, RadioGroup, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
@@ -42,7 +42,8 @@ interface Props {
 }
 
 interface InputProps {
-  target: string
+  target: string,
+  user_id?: string | number,
 }
 
 const calculateRate = (total: number, answerTotal: number) => {
@@ -52,9 +53,13 @@ const calculateRate = (total: number, answerTotal: number) => {
 
 export default function Dashboard({ auth, clientData, target = 'all', total, answerTotal }: Props) {
   console.log(clientData)
-  const { data, setData, get, post } = useForm<InputProps>({ target: target });
+  const params = new URLSearchParams(window.location.search);
+  const user_id = params.get('user_id');
+  const { data, setData, get, post } = useForm<InputProps>({ target: target, user_id: user_id ?? '' });
   const [answeredClients, setAnsweredClients] = useState<Client[]>([])
   const [noAnsweredClients, setNoAnsweredClients] = useState<Client[]>([])
+
+  console.log(data)
 
   useEffect(() => {
     const answeredClients = clientData.data.filter(client => client.responses.length >= 2)
@@ -69,9 +74,7 @@ export default function Dashboard({ auth, clientData, target = 'all', total, ans
     get(route('dashboard', { target: data.target }));
   };
   const download = () => {
-    console.log('downloading')
     const token = document?.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
-    console.log(token)
     fetch(route('download'), {
       method: 'POST',
       headers: {

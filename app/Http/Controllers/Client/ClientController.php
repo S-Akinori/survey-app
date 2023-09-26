@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Client;
 
 use App\Http\Controllers\Controller;
 use App\Models\Client;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -31,7 +32,7 @@ class ClientController extends Controller
       $query->with('responses')->where('user_id', $user_id);
     }
     $clientData = $query->paginate(20);
-    $total = Client::count();
+    $total = Client::where('user_id', $user_id)->count();
     $answerTotal = Client::has('responses', '>=', 2)->count();
     return Inertia::render('Dashboard', [
       'clientData' => $clientData,
@@ -104,10 +105,14 @@ class ClientController extends Controller
 
     $callback = function () use ($request) {
       $handle = fopen('php://output', 'w');
-          // BOMの追加
-    fputs($handle, chr(0xEF) . chr(0xBB) . chr(0xBF));
+      // BOMの追加
+      fputs($handle, chr(0xEF) . chr(0xBB) . chr(0xBF));
       Log::debug('open');
       $user = auth()->user();
+
+      if($user->role === 'admin' && $request->user_id) {
+        $user = User::find($request->user_id);
+      }
 
       // CSVヘッダーの書き込み
       fputcsv($handle, ['id', 'client_id', 'status', 'submitted_at', 'created_at']);
