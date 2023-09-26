@@ -13,6 +13,7 @@ interface Props {
 }
 
 const ClientAdminIndex = ({users, auth }: Props) => {
+  console.log(users)
   return (
     <AdminAuthenticatedLayout
       user={auth.user}
@@ -29,6 +30,7 @@ const ClientAdminIndex = ({users, auth }: Props) => {
                 <Link href={route('dashboard', {user_id: user.id})} className="pr-4">回答状況</Link>
                 <Link href={route('admin.clientAdmin.edit', {id: user.id})} className="pr-4">編集</Link>
                 <Link href={route('dashboard', {user_id: user.id})} className="pr-4">csv</Link>
+                <Link href={route('client.survey.show', {id: user.surveys[0].id})} className="pr-4">アンケート表示</Link>
               </div>
             </li>
           ))}

@@ -18,7 +18,7 @@ class AdminClientAdminController extends Controller
     //
 
     public function index() {
-      $users = User::where('id', '!=', 1)->latest()->get();
+      $users = User::with('surveys')->where('id', '!=', 1)->latest()->get();
       return Inertia::render('Admin/ClientAdminIndex', [
         'users' => $users,
       ]);
