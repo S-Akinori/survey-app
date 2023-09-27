@@ -154,6 +154,7 @@ const ClientSurveyShow = ({ auth, survey, response, flash }: Props) => {
                               multiline
                               rows={4}
                             />
+                            <div>{data['q_' + question.id] ? data['q_' + question.id].length : 0}文字</div>
                           </div>
                         )}
                         {question.type === 'dropdown' && question.choices && (

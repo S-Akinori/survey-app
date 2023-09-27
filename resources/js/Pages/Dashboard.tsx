@@ -47,8 +47,8 @@ interface InputProps {
 }
 
 const calculateRate = (total: number, answerTotal: number) => {
-  if(total === 0) return 0
-  return Math.floor(answerTotal * 100 / total);
+  if(total === 0) return -1
+  return Math.floor(answerTotal * 1000 / total) / 10;
 }
 
 export default function Dashboard({ auth, clientData, target = 'all', total, answerTotal }: Props) {
@@ -115,7 +115,7 @@ export default function Dashboard({ auth, clientData, target = 'all', total, ans
               <div className='flex items-center'>
                 <div className='md:flex items-center px-4 mb-4'>
                   <div className='md:pr-2 font-bold text-center'>回答状況</div>
-                  <Box className='text-center'>{calculateRate(total, answerTotal) !== 0 ? calculateRate(total, answerTotal) : '-'}%</Box>
+                  <Box className='text-center'>{calculateRate(total, answerTotal) !== -1 ? calculateRate(total, answerTotal) : '-'}%</Box>
                 </div>
                 <div className='md:flex items-center px-4 mb-4'>
                   <div className='md:pr-2 font-bold text-center'>回答数</div>

@@ -27,7 +27,10 @@ const FormShow = ({ survey, auth }: Props) => {
   return (
     <AdminAuthenticatedLayout
       user={auth.user}
-      header={<h2 className="font-semibold leading-tight">{survey.user?.company} | {survey.user?.name} 様</h2>}
+      header={<h2 className="font-semibold leading-tight">
+        {survey.id == 1 && <span>{survey.user?.name}</span>}
+        {survey.id != 1 && <span>{survey.user?.company} | {survey.user?.name} 様</span>}
+      </h2>}
     >
       <Head title={survey.title} />
       <Container className="py-12">

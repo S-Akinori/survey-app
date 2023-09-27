@@ -32,6 +32,7 @@ const createInitialData = ( response: Response): InputProps => {
 
 const SurveyShow = ({ auth, survey, response, flash }: Props) => {
   const { data, setData, post, put, processing, errors, reset } = useForm<InputProps>(response ? createInitialData(response) : {});
+
   const onChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement> | SelectChangeEvent) => {
     const name = e.target.name
     const value = e.target.value
@@ -50,7 +51,6 @@ const SurveyShow = ({ auth, survey, response, flash }: Props) => {
       put(route('client.survey.update', { survey_id: survey.id }));
     }
   };
-
   return (
     <ClientAuthenicatedLayout
       user={auth.user}
@@ -161,6 +161,7 @@ const SurveyShow = ({ auth, survey, response, flash }: Props) => {
                                 multiline
                                 rows={4}
                               />
+                            <div>{data['q_' + question.id] ? data['q_' + question.id].length : 0}文字</div>
                             </div>
                           )}
                           {question.type === 'dropdown' && question.choices && (
