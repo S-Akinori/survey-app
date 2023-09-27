@@ -12,8 +12,29 @@ interface Props {
   users: User[];
 }
 
-const ClientAdminIndex = ({users, auth }: Props) => {
+const ClientAdminIndex = ({ users, auth }: Props) => {
   console.log(users)
+  const download = (userId: string | number) => {
+    const token = document?.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+    fetch(route('answers.download'), {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRF-TOKEN': token || '',
+      },
+      body: JSON.stringify({ user_id: userId }),
+    }).then(response => response.blob())
+      .then(blob => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `${auth.user.name}.csv`;  // 任意のファイル名を設定
+        document.body.appendChild(a); // aタグをDOMに追加（非表示）
+        a.click();                    // aタグをクリックしてダウンロードを開始
+        document.body.removeChild(a); // aタグをDOMから削除
+      })
+      .catch(error => console.error('Error:', error));
+  };
   return (
     <AdminAuthenticatedLayout
       user={auth.user}
@@ -25,12 +46,13 @@ const ClientAdminIndex = ({users, auth }: Props) => {
         <ul className="mb-4">
           {users.map((user) => (
             <li key={user.id} className="py-4 border-b flex justify-between">
-              <Link href={route('admin.users.show', {id: user.id})}>{user.company} : {user.name}</Link>
+              <Link href={route('admin.users.show', { id: user.id })}>{user.company} : {user.name}</Link>
               <div>
-                <Link href={route('dashboard', {user_id: user.id})} className="pr-4">回答状況</Link>
-                <Link href={route('admin.clientAdmin.edit', {id: user.id})} className="pr-4">編集</Link>
-                <Link href={route('dashboard', {user_id: user.id})} className="pr-4">csv</Link>
-                <Link href={route('client.survey.show', {id: user.surveys[0].id})} className="pr-4">アンケート表示</Link>
+                <a target="_blank" href={route('dashboard', { user_id: user.id })} className="pr-4">回答状況</a>
+                <Link href={route('admin.clientAdmin.edit', { id: user.id })} className="pr-4">編集</Link>
+                <button className="pr-4">csv</button>
+                {/* <button onClick={() => download(user.id)} className="pr-4">csv</button> */}
+                <a target="_blank" href={route('admin.client.survey.show', { id: user.surveys[0].id })} className="pr-4">アンケート表示</a>
               </div>
             </li>
           ))}

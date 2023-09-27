@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\AdminClientAdminController;
+use App\Http\Controllers\Admin\AdminClientSurveyController;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\AdminLoginController;
 use App\Http\Controllers\Admin\AdminSurveyController;
@@ -15,6 +16,7 @@ use App\Http\Controllers\FormController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\SurveyController;
+use App\Http\Controllers\SurveyFileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -44,6 +46,7 @@ Route::get('/create-list', function () {
     return Inertia::render('CreateList');
 })->middleware(['auth', 'verified'])->name('create-list');
 Route::post('/clients-download', [ClientController::class, 'download'])->name('download');
+Route::post('/answers-download', [SurveyFileController::class, 'download'])->name('answers.download');
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -103,6 +106,11 @@ Route::middleware('admin')->group(function() {
   Route::get('/admin/questions/{id}/edit', [QuestionController::class, 'edit'])->name('admin.question.edit');
   Route::put('/admin/questions/{id}', [QuestionController::class, 'update'])->name('admin.question.update');
   Route::delete('/admin/questions/{id}', [QuestionController::class, 'destroy'])->name('admin.question.destroy');
+
+  Route::get('/admin/client/survey/thanks', function() {
+    return Inertia::render('Admin/ClientSurveyThanks');
+  })->name('admin.client.survey.thanks');
+  Route::get('/admin/client/survey/{id}', [AdminClientSurveyController::class, 'show'])->name('admin.client.survey.show');
 });
 
 // Route::middleware('guest:admin')->group(function () {

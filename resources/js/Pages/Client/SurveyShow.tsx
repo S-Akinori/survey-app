@@ -78,8 +78,7 @@ const SurveyShow = ({ auth, survey, response, flash }: Props) => {
                         <div key={question.id} className="mb-16">
                           {question.type === 'scale' && question.scale && (
                             <div>
-                              {/* 質問は共通なので最初だけ表示 */}
-                              {index === 0 && <Title title={question.title} Tag="h4" className="py-4 mb-4 border-b-2 border-main" />}
+                              <Title title={question.title} Tag="h4" className="py-4 mb-4 border-b-2 border-main" />
                               <div className="mb-20">
                                 <div className="md:flex justify-between">
                                   <BorderBox>A: {question.scale.min_text}</BorderBox>

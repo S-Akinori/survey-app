@@ -71,6 +71,6 @@ class RegisteredUserController extends Controller
 
         // Auth::login($user);
 
-        return redirect()->route('admin.question.create', ['form_id' => $survey->forms->first()->id]);
+        return redirect()->route('admin.form.show', ['id' => $survey->forms->first()->id]);
     }
 }

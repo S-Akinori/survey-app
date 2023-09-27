@@ -49,15 +49,15 @@ const FormShow = ({ survey, auth }: Props) => {
               {form.description && <div className="text-sm mb-4">{form.description}</div>}
               <div className="mt-4">
                 <Button><Link href={route('admin.form.show', { id: form.id })}>フォーム詳細</Link></Button>
-                <Button className="bg-red-500 text-white ml-4" onClick={handleOpen} value={form.id}>フォーム削除</Button>
+                {/* <Button className="bg-red-500 text-white ml-4" onClick={handleOpen} value={form.id}>フォーム削除</Button> */}
               </div>
             </div>
           ))}
         </div>
-        <div className="mb-4">
+        {/* <div className="mb-4">
           <Button><Link href={route('admin.form.create', { survey_id: survey.id })}>新規フォーム作成</Link></Button>
-        </div>
-        <Button><Link href={route('client.survey.show', { id: survey.id })} target="_blank">アンケートを表示する</Link></Button>
+        </div> */}
+        <Button><a href={route('admin.client.survey.show', { id: survey.id })} target="_blank">アンケートを表示する</a></Button>
       </Container>
       <DeleteAlert open={open} setOpen={setOpen} routeName="admin.form.destroy" data={{'id': targetId}} />
     </AdminAuthenticatedLayout>
