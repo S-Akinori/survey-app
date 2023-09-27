@@ -33,7 +33,7 @@ class ClientController extends Controller
     }
     $clientData = $query->paginate(20);
     $total = Client::where('user_id', $user_id)->count();
-    $answerTotal = Client::has('responses', '>=', 2)->count();
+    $answerTotal = Client::where('user_id', $user_id)->has('responses', '>=', 2)->count();
     return Inertia::render('Dashboard', [
       'clientData' => $clientData,
       'target' => $request->target ?? 'all',

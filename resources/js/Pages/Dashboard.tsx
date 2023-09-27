@@ -53,6 +53,7 @@ const calculateRate = (total: number, answerTotal: number) => {
 
 export default function Dashboard({ auth, clientData, target = 'all', total, answerTotal }: Props) {
   console.log(clientData)
+  console.log(answerTotal)
   const params = new URLSearchParams(window.location.search);
   const user_id = params.get('user_id');
   const { data, setData, get, post } = useForm<InputProps>({ target: target, user_id: user_id ?? '' });
