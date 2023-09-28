@@ -58,7 +58,6 @@ class ClientController extends Controller
       if (!$existingClient) {
         $client = new Client();
         $client->client_id = $row['client_id'];
-        $client->created_at = $row['created_at'];
         $client->user_id = $adminId;
         $client->name = $row['client_id']; //ダミー
         $client->password = Hash::make($row['client_id']); //ダミー
@@ -76,7 +75,7 @@ class ClientController extends Controller
 
     $clients = [];
     while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
-      $clientId = $data[1];
+      $clientId = $data[0];
 
       // // client_idが既に存在するかチェック
       // $existingClient = Client::where('client_id', $clientId)->first();
@@ -84,7 +83,6 @@ class ClientController extends Controller
       // 存在しない場合のみ、新しいレコードを作成
       $clients[] = [
         'client_id' => $clientId,
-        'created_at' => date("Y-m-d H:i:s", strtotime($data[0]))
       ];
     }
 

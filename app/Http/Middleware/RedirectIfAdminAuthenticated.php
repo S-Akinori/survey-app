@@ -16,7 +16,7 @@ class RedirectIfAdminAuthenticated
    */
   public function handle(Request $request, Closure $next): Response
   {
-    if (Auth::guard('admin')->check()) {
+    if (Auth::check() && Auth::user()->role == 'admin') {
       // 管理者としてログインしている場合に遷移させたいURLにリダイレクト
       return redirect()->route('admin.index');
     }

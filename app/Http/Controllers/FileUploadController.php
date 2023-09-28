@@ -25,7 +25,7 @@ class FileUploadController extends Controller
       fgetcsv($handle, 1000, ",");  // headerをスキップ
   
       while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
-          $clientId = $data[1];
+          $clientId = $data[0];
   
           // client_idが既に存在するかチェック
           $existingClient = Client::where('client_id', $clientId)->first();
@@ -34,9 +34,6 @@ class FileUploadController extends Controller
               // 存在しない場合のみ、新しいレコードを作成
               $client = new Client();
               $client->client_id = $clientId;
-  
-              // CSVのタイムスタンプを created_at カラムにセット
-              $client->created_at = date("Y-m-d H:i:s", strtotime($data[0]));
   
               $client->save();
           }

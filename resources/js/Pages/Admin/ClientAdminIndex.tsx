@@ -28,7 +28,7 @@ const ClientAdminIndex = ({ users, auth }: Props) => {
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = `${auth.user.name}.csv`;  // 任意のファイル名を設定
+        a.download = `${auth.user.name}-answers.csv`;  // 任意のファイル名を設定
         document.body.appendChild(a); // aタグをDOMに追加（非表示）
         a.click();                    // aタグをクリックしてダウンロードを開始
         document.body.removeChild(a); // aタグをDOMから削除
@@ -50,8 +50,8 @@ const ClientAdminIndex = ({ users, auth }: Props) => {
               <div>
                 <a target="_blank" href={route('dashboard', { user_id: user.id })} className="pr-4">回答状況</a>
                 <Link href={route('admin.clientAdmin.edit', { id: user.id })} className="pr-4">編集</Link>
-                <button className="pr-4">csv</button>
-                {/* <button onClick={() => download(user.id)} className="pr-4">csv</button> */}
+                {/* <button className="pr-4">csv</button> */}
+                <button onClick={() => download(user.id)} className="pr-4">csv</button>
                 <a target="_blank" href={route('admin.client.survey.show', { id: user.surveys[0].id })} className="pr-4">アンケート表示</a>
               </div>
             </li>

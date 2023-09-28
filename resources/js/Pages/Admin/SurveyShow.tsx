@@ -18,6 +18,7 @@ interface Props {
 
 const FormShow = ({ survey, auth }: Props) => {
   const [open, setOpen] = React.useState(false);
+  const [copy, setCopy] = React.useState(false);
   const [targetId, setTargetId] = React.useState(0);
   const handleOpen = (e: React.MouseEvent<HTMLButtonElement>) => {
     setTargetId(Number(e.currentTarget.value))
@@ -60,9 +61,20 @@ const FormShow = ({ survey, auth }: Props) => {
         {/* <div className="mb-4">
           <Button><Link href={route('admin.form.create', { survey_id: survey.id })}>新規フォーム作成</Link></Button>
         </div> */}
-        <Button><a href={route('admin.client.survey.show', { id: survey.id })} target="_blank">アンケートを表示する</a></Button>
+        <div className="mb-4">
+          <Button><a href={route('admin.client.survey.show', { id: survey.id })} target="_blank">アンケートを表示する</a></Button>
+        </div>
+        <div className="mb-4">
+          <Button onClick={e => setCopy(true)}>アンケートURLを発行</Button>
+          {copy && (
+            <div className="p-4 border border-main mt-4">
+              <div>以下のURLを従業員に共有ください。ログインは各従業員に登録したIDが必要です。</div>
+              <p>{route('client.login')}</p>
+            </div>
+          )}
+        </div>
       </Container>
-      <DeleteAlert open={open} setOpen={setOpen} routeName="admin.form.destroy" data={{'id': targetId}} />
+      <DeleteAlert open={open} setOpen={setOpen} routeName="admin.form.destroy" data={{ 'id': targetId }} />
     </AdminAuthenticatedLayout>
   );
 }

@@ -19,6 +19,11 @@ class RedirectIfAuthenticated
     {
         $guards = empty($guards) ? [null] : $guards;
 
+        if (Auth::check() && Auth::user()->role == 'admin') {
+          // 管理者としてログインしている場合に遷移させたいURLにリダイレクト
+          return redirect()->route('admin.index');
+        }
+        
         foreach ($guards as $guard) {
             if (Auth::guard($guard)->check()) {
                 return redirect(RouteServiceProvider::HOME);

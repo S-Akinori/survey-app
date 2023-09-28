@@ -172,7 +172,7 @@ const SurveyShow = ({ auth, survey, response, flash }: Props) => {
                                   labelId='type'
                                   id={'q_' + question.id}
                                   name={'q_' + question.id}
-                                  value={data['q_' + question.id] ? data['q_' + question.id] : question.choices[0].value}
+                                  value={data['q_' + question.id]}
                                   onChange={onChange}
                                 >
                                   {question.choices.map((choice, index) => (

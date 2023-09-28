@@ -63,23 +63,19 @@ export default function CreateList({ auth }: PageProps) {
               <TableRow>
                 <TableCell className='bg-gray-300'></TableCell>
                 <TableCell className='bg-gray-300'>A</TableCell>
-                <TableCell className='bg-gray-300'>B</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               <TableRow sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
                 <TableCell scope="row" className='bg-gray-300'>1</TableCell>
-                <TableCell>タイムスタンプ</TableCell>
                 <TableCell>ID</TableCell>
               </TableRow>
               <TableRow>
                 <TableCell scope="row" className='bg-gray-300'>2</TableCell>
-                <TableCell>7/7/2023 21:09:03</TableCell>
                 <TableCell>R0151000</TableCell>
               </TableRow>
               <TableRow>
                 <TableCell scope="row" className='bg-gray-300'>3</TableCell>
-                <TableCell>7/10/2023 12:43:01</TableCell>
                 <TableCell>R0151001</TableCell>
               </TableRow>
             </TableBody>
