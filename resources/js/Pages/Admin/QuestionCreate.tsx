@@ -3,7 +3,7 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, Link, useForm } from '@inertiajs/react';
 import { PageProps, User } from '@/types';
 import Box from '@/Components/Box';
-import { Container, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent, TextField } from '@mui/material';
+import { Checkbox, Container, FormControl, FormControlLabel, FormGroup, InputLabel, MenuItem, Select, SelectChangeEvent, TextField } from '@mui/material';
 import Button from '@/Components/Button';
 import AdminAuthenticatedLayout from '../../Layouts/AdminAuthenticatedLayout';
 import TextInput from '@/Components/TextInput';
@@ -35,6 +35,7 @@ interface InputProps {
     step: number
   }
   choices?: Choice[]
+  required: boolean
 }
 
 export default function QuestionCreate({ auth, form_id, user }: Props) {
@@ -43,6 +44,7 @@ export default function QuestionCreate({ auth, form_id, user }: Props) {
     title: '',
     description: '',
     type: '',
+    required: true
   });
 
   const submit: FormEventHandler = (e) => {
@@ -59,11 +61,15 @@ export default function QuestionCreate({ auth, form_id, user }: Props) {
       if (!data.scale) newData = { ...data, [name]: value, scale: { minText: '', maxText: '', min: 1, max: 4, step: 1 } }
     } else if (name === 'type' && value === 'dropdown') {
       if (!data.choices) newData = { ...data, [name]: value, choices: [{ id: generateRandomString(10), title: '', value: '', order: 1 }] }
-    }
+    } 
     setData(newData)
   }
 
-  console.log(data)
+  const onCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const checked = e.target.checked
+    const newData: InputProps = { ...data, required: checked }
+    setData(newData)
+  }
 
   const onScaleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const name = e.target.name
@@ -128,18 +134,6 @@ export default function QuestionCreate({ auth, form_id, user }: Props) {
                 required
               />
             </div>
-            {/* <div className='mb-4'>
-              <TextField
-                id='name'
-                type="text"
-                name='name'
-                value={data.name}
-                variant='outlined'
-                label='英語名（inputタグ用）'
-                onChange={onChange}
-                fullWidth
-              />
-            </div> */}
             <div className='mb-4'>
               <TextField
                 id='description'
@@ -153,6 +147,11 @@ export default function QuestionCreate({ auth, form_id, user }: Props) {
                 multiline
                 rows={2}
               />
+            </div>
+            <div className='mb-4'>
+              <FormGroup>
+                <FormControlLabel control={<Checkbox defaultChecked onChange={onCheckboxChange} />} label="必須項目にする" />
+              </FormGroup>
             </div>
             <div className='mb-4'>
               <FormControl fullWidth>

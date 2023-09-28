@@ -3,7 +3,7 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, Link, useForm } from '@inertiajs/react';
 import { PageProps } from '@/types';
 import Box from '@/Components/Box';
-import { Container, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent, TextField } from '@mui/material';
+import { Checkbox, Container, FormControl, FormControlLabel, FormGroup, InputLabel, MenuItem, Select, SelectChangeEvent, TextField } from '@mui/material';
 import Button from '@/Components/Button';
 import AdminAuthenticatedLayout from '../../Layouts/AdminAuthenticatedLayout';
 import TextInput from '@/Components/TextInput';
@@ -32,6 +32,7 @@ interface InputProps {
     step: number
   }
   choices?: Choice[]
+  required: boolean
 }
 
 const QuestionEdit = ({ auth, question }: Props) => {
@@ -40,8 +41,11 @@ const QuestionEdit = ({ auth, question }: Props) => {
     description: question.description,
     type: question.type,
     scale: question.scale,
-    choices: question.choices
+    choices: question.choices,
+    required: question.required ? true : false
   });
+
+  console.log(data)
 
   const submit: FormEventHandler = (e) => {
     e.preventDefault();
@@ -54,10 +58,16 @@ const QuestionEdit = ({ auth, question }: Props) => {
     const value = e.target.value
     let newData = { ...data, [name]: value }
     if (name === 'type' && value === 'scale') {
-      if(!data.scale) newData = { ...data, [name]: value, scale: { min_text: '', max_text: '', min: 1, max: 4, step: 1 } }
+      if (!data.scale) newData = { ...data, [name]: value, scale: { min_text: '', max_text: '', min: 1, max: 4, step: 1 } }
     } else if (name === 'type' && value === 'dropdown') {
-      if(!data.choices) newData = { ...data, [name]: value, choices: [{ id: generateRandomString(10), title: '', value: '', order: 1 }] }
+      if (!data.choices) newData = { ...data, [name]: value, choices: [{ id: generateRandomString(10), title: '', value: '', order: 1 }] }
     }
+    setData(newData)
+  }
+
+  const onCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const checked = e.target.checked
+    const newData: InputProps = { ...data, required: checked }
     setData(newData)
   }
 
@@ -90,9 +100,9 @@ const QuestionEdit = ({ auth, question }: Props) => {
     const value = e.target.value
     const key = name?.split('_')[2]
     const id = name?.split('_')[0]
-    
+
     if (!key || !id || !data.choices) return
-    const newChoices = key === 'title' ? data.choices.map(choice => choice.id == id ? { ...choice, [key]: value, value: value } : choice) :  data.choices.map(choice => choice.id == id ? { ...choice, [key]: value } : choice)
+    const newChoices = key === 'title' ? data.choices.map(choice => choice.id == id ? { ...choice, [key]: value, value: value } : choice) : data.choices.map(choice => choice.id == id ? { ...choice, [key]: value } : choice)
     const newData: InputProps = { ...data, choices: newChoices }
     setData(newData)
   }
@@ -134,6 +144,11 @@ const QuestionEdit = ({ auth, question }: Props) => {
                 onChange={onChange}
                 fullWidth
               />
+            </div>
+            <div className='mb-4'>
+              <FormGroup>
+                <FormControlLabel control={<Checkbox checked={data.required} onChange={onCheckboxChange} />} label="必須項目にする" />
+              </FormGroup>
             </div>
             <div className='mb-4'>
               <FormControl fullWidth>

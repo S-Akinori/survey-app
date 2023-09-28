@@ -14,6 +14,7 @@ class Survey extends Model
     'title',
     'description',
     'status',
+    'token',
   ];
 
   /**

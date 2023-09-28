@@ -18,7 +18,7 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->string('type');
             $table->string('status')->default('draft');
-            $table->boolean('required')->nullable();
+            $table->boolean('required')->default(1);
             $table->timestamps();
         });
     }

@@ -17,6 +17,7 @@ class SurveySheeder extends Seeder
         'user_id' => 1,
         'title' => '共通アンケート',
         'status' => 'draft',
+        'token' => 'KDDuWrBTrhLEDPctZHZJ',
       ]);
     }
 }

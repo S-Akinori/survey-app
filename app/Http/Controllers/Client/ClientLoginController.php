@@ -24,7 +24,7 @@ class ClientLoginController extends Controller
   /**
    * ログイン
    */
-  public function store(ClientLoginRequest $request): RedirectResponse
+  public function store(ClientLoginRequest $request, $token): RedirectResponse
   {
     $request->authenticate();
 
@@ -32,7 +32,11 @@ class ClientLoginController extends Controller
 
     $client = Auth::guard('client')->user();
     $user_id = $client->user_id;
-    $survey_id = Survey::where('user_id', $user_id)->first()->id;
+    $survey_id = Survey::where('user_id', $user_id)->where('token', $token)->first()->id;
+    Log::debug('survey_id' . $survey_id);
+    if($survey_id == null) {
+      return redirect()->route('client.login');
+    }
     return redirect()->route('client.survey.show', ['id' => $survey_id]);
 
     // return redirect()->route('client.survey.show', ['user_id' => $client->user_id]);

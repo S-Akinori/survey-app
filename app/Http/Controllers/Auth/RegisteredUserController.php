@@ -14,8 +14,10 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rules;
+use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Inertia\Response;
+
 
 class RegisteredUserController extends Controller
 {
@@ -61,6 +63,7 @@ class RegisteredUserController extends Controller
           'user_id' => $user->id,
           'title' => 'Key Culture Survey',
           'status' => 'draft',
+          'token' => Str::random(20)
         ]);
         
         //フォームを作成
@@ -70,6 +73,9 @@ class RegisteredUserController extends Controller
         ]);
 
         // Auth::login($user);
+
+        //初回用のフォームを作成
+        session(['is_first' => true]);
 
         return redirect()->route('admin.form.show', ['id' => $survey->forms->first()->id]);
     }

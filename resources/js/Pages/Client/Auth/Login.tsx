@@ -9,6 +9,8 @@ import { Head, Link, useForm } from '@inertiajs/react';
 import Button from '@/Components/Button';
 
 export default function ClientLogin({ status, canResetPassword }: { status?: string, canResetPassword: boolean }) {
+  const params = new URLSearchParams(window.location.search);
+  const token = params.get('token');
   const { data, setData, post, processing, errors, reset } = useForm({
     client_id: '',
     password: '',
@@ -18,7 +20,7 @@ export default function ClientLogin({ status, canResetPassword }: { status?: str
   const submit: FormEventHandler = (e) => {
     e.preventDefault();
     setData('password', data.client_id)
-    post(route('client.login.store'));
+    post(route('client.login.store', { token: token ?? '' }));
   };
 
   return (

@@ -43,6 +43,7 @@ class QuestionController extends Controller
         'description' => $request->description,
         'type' => $request->type,
         'status' => 'draft',
+        'required' => $request->required ? $request->required : 1,
       ]);
 
       if($request->type === 'scale') {
@@ -57,6 +58,9 @@ class QuestionController extends Controller
         $question->choices()->createMany($request->choices);
       }
 
+      if(session('is_first')) {
+        
+      }
       return redirect()->route('admin.form.show', ['id' => $form_id]);
     }
 
@@ -71,6 +75,7 @@ class QuestionController extends Controller
       $question->title = $request->title;
       $question->description = $request->description;
       $question->type = $request->type;
+      $question->required = $request->required;
       $question->save();
 
       if($request->type === 'scale') {

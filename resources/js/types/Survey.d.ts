@@ -11,4 +11,5 @@ export interface Survey {
   updated_at: string;
   forms: Form[];
   user?: User
+  token: string
 }

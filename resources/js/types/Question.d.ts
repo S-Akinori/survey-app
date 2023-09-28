@@ -17,7 +17,7 @@ export interface Question {
   }
   choices?: Choice[]
   form?: Form
-  required?: string;
+  required: boolean;
   created_at?: string;
   updated_at?: string;
 }

@@ -43,6 +43,7 @@ const SurveyShow = ({ auth, survey, response, flash }: Props) => {
   const submit: FormEventHandler = (e) => {
     e.preventDefault();
     console.log(data)
+    return
     if(!response) { //未回答の場合は新規回答
       console.log('store')
       post(route('client.survey.store', { survey_id: survey.id }));
@@ -50,6 +51,7 @@ const SurveyShow = ({ auth, survey, response, flash }: Props) => {
       console.log('update')
       put(route('client.survey.update', { survey_id: survey.id }));
     }
+    reset()
   };
   return (
     <ClientAuthenicatedLayout
@@ -78,13 +80,13 @@ const SurveyShow = ({ auth, survey, response, flash }: Props) => {
                         <div key={question.id} className="mb-16">
                           {question.type === 'scale' && question.scale && (
                             <div>
-                              <Title title={question.title} Tag="h4" className="py-4 mb-4 border-b-2 border-main" />
+                              <Title title={question.title + '*'} Tag="h4" className="py-4 mb-4 border-b-2 border-main" />
                               <div className="mb-20">
                                 <div className="md:flex justify-between">
                                   <BorderBox>A: {question.scale.min_text}</BorderBox>
                                   <BorderBox>B: {question.scale.max_text}</BorderBox>
                                 </div>
-                                <FormControl sx={{ width: '100%' }}>
+                                <FormControl sx={{ width: '100%' }} required>
                                   <RadioGroup
                                     row
                                     aria-labelledby="demo-form-control-label-placement"
@@ -135,7 +137,7 @@ const SurveyShow = ({ auth, survey, response, flash }: Props) => {
                           )}
                           {question.type === 'text' && (
                             <div>
-                              <Title title={question.title} Tag="h4" className="py-4 mb-4 border-b-2 border-main" />
+                              <Title title={question.title + '*'} Tag="h4" className="py-4 mb-4 border-b-2 border-main" />
                               <TextField
                                 id={'q_' + question.id}
                                 type="text"
@@ -144,12 +146,13 @@ const SurveyShow = ({ auth, survey, response, flash }: Props) => {
                                 variant='outlined'
                                 onChange={onChange}
                                 fullWidth
+                                required
                               />
                             </div>
                           )}
                           {question.type === 'textarea' && (
                             <div>
-                              <Title title={question.title} Tag="h4" className="py-4 mb-4 border-b-2 border-main" />
+                              <Title title={question.title + '*'} Tag="h4" className="py-4 mb-4 border-b-2 border-main" />
                               <TextField
                                 id={'q_' + question.id}
                                 type="text"
@@ -160,13 +163,14 @@ const SurveyShow = ({ auth, survey, response, flash }: Props) => {
                                 fullWidth
                                 multiline
                                 rows={4}
+                                required
                               />
                             <div>{data['q_' + question.id] ? data['q_' + question.id].length : 0}文字</div>
                             </div>
                           )}
                           {question.type === 'dropdown' && question.choices && (
                             <div>
-                              <Title title={question.title} Tag="h4" className="py-4 mb-4 border-b-2 border-main" />
+                              <Title title={question.title + '*'} Tag="h4" className="py-4 mb-4 border-b-2 border-main" />
                               <FormControl fullWidth>
                                 <Select
                                   labelId='type'
