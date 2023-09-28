@@ -40,7 +40,6 @@ class SurveyFileController extends Controller
       if ($user->role === 'admin' && $client_user_id) {
         $user_id = $client_user_id;
       }
-      Log::debug('ユーザーID:' . $user_id . 'のアンケートを取得します');
       $surveys = Survey::with(['forms.questions.scale'])->where('user_id', $user_id)->orWhere('user_id', 1)->latest()->get();
 
       Log::debug('ユーザーID:' . $user_id . 'のアンケートを取得しました');
@@ -87,11 +86,11 @@ class SurveyFileController extends Controller
       foreach ($groupedResponses as $clientId => $clientResponses) {
         $contents = [];
         $count = 0;
-        $contents[] = $clientResponses[0]->submitted_at;
-        $contents[] = $clientId;
         foreach ($clientResponses as $response) {
-          Log::debug('res Id'.$response->id);
-          Log::debug('survey id'.$response->survey_id);
+          if ($count === 0) {
+            $contents[] = $response->created_at;
+            $contents[] = $response->client->client_id;
+          }
           if ($count === 1) {
             $blanks = [];
             for ($i = 0; $i < 7 - count($contents); $i++) {
