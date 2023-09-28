@@ -19,6 +19,7 @@ use App\Http\Controllers\SurveyController;
 use App\Http\Controllers\SurveyFileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
 /*
@@ -111,11 +112,17 @@ Route::middleware('admin')->group(function() {
     return Inertia::render('Admin/ClientSurveyThanks');
   })->name('admin.client.survey.thanks');
   Route::get('/admin/client/survey/{id}', [AdminClientSurveyController::class, 'show'])->name('admin.client.survey.show');
+
+  Route::get('/download-file/{client_user_id}/{filename}', [SurveyFileController::class, 'download'])->name('admin.download.file');
 });
 
 // Route::middleware('guest:admin')->group(function () {
 // });
 Route::get('/admin/register', [RegisteredAdminController::class, 'create'])->name('admin.register');
 Route::post('/admin/register', [RegisteredAdminController::class, 'store'])->name('admin.register.store');
+
+Route::get('/refresh-csrf', function() {
+  return ['csrfToken' => csrf_token()];
+});
 
 require __DIR__.'/auth.php';
