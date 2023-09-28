@@ -34,7 +34,7 @@ class Client extends Authenticatable
 
     public function getAuthIdentifierName()
     {
-        return 'client_id';
+        return 'id';
     }
 
     public function user()

@@ -54,7 +54,7 @@ class ClientController extends Controller
 
     $adminId = auth()->id(); // ログインしているユーザーのIDを取得
     foreach ($clients as $row) {
-      $existingClient = Client::where('client_id', $row['client_id'])->first();
+      $existingClient = Client::where('client_id', $row['client_id'])->where('user_id', $adminId)->first();
       if (!$existingClient) {
         $client = new Client();
         $client->client_id = $row['client_id'];

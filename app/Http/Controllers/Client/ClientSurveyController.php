@@ -8,6 +8,7 @@ use App\Models\Response;
 use App\Models\Survey;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 
 class ClientSurveyController extends Controller
@@ -16,6 +17,7 @@ class ClientSurveyController extends Controller
     $survey = Survey::with(['forms.questions.scale', 'forms.questions.choices'])->find($id);
     $response = Response::with('answers')->where('client_id', Auth::guard('client')->user()->id)->where('survey_id', $id)->first();
     $client = Auth::guard('client')->user();
+    Log::debug($client);
     if($id != 1 && $client->user_id != $survey->user_id) {
       return redirect()->route('client.login');
     } else {
