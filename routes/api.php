@@ -24,3 +24,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::post('/upload', [ClientController::class, 'store']);
 
 Route::get('/clients', [ClientController::class, 'index']);
+
+Route::get('/refresh-csrf', function() {
+  return ['csrfToken' => csrf_token()];
+});

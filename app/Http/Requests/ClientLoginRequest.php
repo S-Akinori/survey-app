@@ -24,6 +24,7 @@ class ClientLoginRequest extends FormRequest
     public function rules(): array
     {
         return [
+          'user_id' => 'required',
           'client_id' => 'required',
           'password' => 'required',
         ];
@@ -31,7 +32,7 @@ class ClientLoginRequest extends FormRequest
 
     public function authenticate(): void
     {
-        if (!Auth::guard('client')->attempt($this->only('client_id', 'password'))) {
+        if (!Auth::guard('client')->attempt($this->only('client_id', 'password', 'user_id'))) {
             throw ValidationException::withMessages(['failed' => __('auth.failed')]);
         }
     }

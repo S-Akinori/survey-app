@@ -8,19 +8,20 @@ import TextInput from '@/Components/TextInput';
 import { Head, Link, useForm } from '@inertiajs/react';
 import Button from '@/Components/Button';
 
-export default function ClientLogin({ status, canResetPassword }: { status?: string, canResetPassword: boolean }) {
+export default function ClientLogin({ status, canResetPassword, message }: { status?: string, canResetPassword: boolean, message?: string }) {
   const params = new URLSearchParams(window.location.search);
-  const token = params.get('token');
+  const user_id = params.get('user_id');
   const { data, setData, post, processing, errors, reset } = useForm({
     client_id: '',
     password: '',
     remember: false,
+    user_id: user_id ?? ''
   });
 
   const submit: FormEventHandler = (e) => {
     e.preventDefault();
     setData('password', data.client_id)
-    post(route('client.login.store', { token: token ?? '' }));
+    post(route('client.login.store'));
   };
 
   return (
@@ -44,7 +45,7 @@ export default function ClientLogin({ status, canResetPassword }: { status?: str
             onBlur={e => setData('password', e.target.value)}
           />
 
-          <InputError message={errors.password} className="mt-2" />
+          <InputError message={errors.client_id} className="mt-2" />
         </div>
         <div className="text-center mt-4">
           <Button className="ml-4" disabled={processing}>

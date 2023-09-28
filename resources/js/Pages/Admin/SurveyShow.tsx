@@ -69,7 +69,7 @@ const FormShow = ({ survey, auth }: Props) => {
           {copy && (
             <div className="p-4 border border-main mt-4">
               <div>以下のURLを従業員に共有ください。ログインは各従業員に登録したIDが必要です。</div>
-              <p>{route('client.login', {token: survey.token})}</p>
+              <p>{route('client.login', {user_id: survey.user_id})}</p>
             </div>
           )}
         </div>

@@ -58,7 +58,7 @@ Route::post('/upload', [ClientController::class, 'store'])->name('upload');
 
 // Client Auth
 Route::get('/client/login', [ClientLoginController::class, 'create'])->name('client.login');
-Route::post('/client/login/{token}', [ClientLoginController::class, 'store'])->name('client.login.store');
+Route::post('/client/login', [ClientLoginController::class, 'store'])->name('client.login.store');
 Route::post('/client/logout', [ClientLoginController::class, 'destroy'])->name('client.logout');
 
 Route::middleware('auth:client')->group(function() {
