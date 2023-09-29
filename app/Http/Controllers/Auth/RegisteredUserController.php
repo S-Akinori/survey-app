@@ -45,6 +45,7 @@ class RegisteredUserController extends Controller
             'end_date' => 'string',
             // 'password' => ['required', 'confirmed', Rules\Password::defaults()],
             'password' => ['required', Rules\Password::defaults()],
+            'token' => Str::uuid()
         ]);
 
         $user = User::create([
@@ -63,7 +64,7 @@ class RegisteredUserController extends Controller
           'user_id' => $user->id,
           'title' => 'Key Culture Survey',
           'status' => 'draft',
-          'token' => Str::random(20)
+          'token' => Str::uuid()
         ]);
         
         //フォームを作成

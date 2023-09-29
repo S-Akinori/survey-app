@@ -38,11 +38,16 @@ class ClientLoginRequest extends FormRequest
   public function authenticate(): void
   {
     $user = User::where('id', $this->user_id)->where('token', $this->token)->first();
+    Log::debug('取得したユーザー');
     Log::debug($user);
     if (!$user) {
       throw ValidationException::withMessages(['failed' => __('auth.failed')]);
     } else {
       $client = Client::where('user_id', $user->id)->where('client_id', $this->client_id)->first();
+      Log::debug('取得したクライアント');
+      if(!$client) {
+        throw ValidationException::withMessages(['failed' => __('auth.failed')]);
+      }
       Auth::guard('client')->login($client);
     }
   }

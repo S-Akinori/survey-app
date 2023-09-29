@@ -23,6 +23,7 @@ export default function ClientLogin({ status, canResetPassword, message }: { sta
   const submit: FormEventHandler = (e) => {
     e.preventDefault();
     setData('password', data.client_id)
+    console.log(data)
     post(route('client.login.store'));
   };
 
