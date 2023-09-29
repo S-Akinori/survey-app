@@ -119,19 +119,19 @@ class ClientController extends Controller
       $query = Client::query();
       $status = '';
       if ($request->target === 'answer') {
-        $clients = $query->with('responses')->where('user_id', $user->id)->has('responses', '>=', 2)->get();
+        $clients = $query->with('responses')->where('user_id', $user_id)->has('responses', '>=', 2)->get();
         $status = '回答済み';
         foreach ($clients as $client) {
           fputcsv($handle, [$client->id, $client->client_id, $status, $client->responses[1]->submitted_at, $client->created_at]);
         }
       } else if ($request->target === 'no-answer') {
-        $clients = $query->with('responses')->where('user_id', $user->id)->has('responses', '<', 2)->get();
+        $clients = $query->with('responses')->where('user_id', $user_id)->has('responses', '<', 2)->get();
         $status = '未回答';
         foreach ($clients as $client) {
           fputcsv($handle, [$client->id, $client->client_id, $status, '', $client->created_at]);
         }
       } else {
-        $clients = $query->with('responses')->where('user_id', $user->id)->get();
+        $clients = $query->with('responses')->where('user_id', $user_id)->get();
         foreach ($clients as $client) {
           $status = $client->responses->count() > 1 ? '回答済み' : '未回答';
           $submitted_at = $status === '回答済み' ? $client->responses[1]->submitted_at : '';

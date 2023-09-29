@@ -179,7 +179,7 @@ export default function Dashboard({ auth, clientData, target = 'all', total, ans
             </div>
           </div>
           <div className='mt-4 text-center'>
-            <Button><a href={route('download', {client_user_id: user_id ?? auth.user.id})}>CSVダウンロード</a></Button>
+            <Button><a href={route('download', {target: target, client_user_id: user_id ?? auth.user.id})}>CSVダウンロード</a></Button>
           </div>
         </div>
       </Container>
