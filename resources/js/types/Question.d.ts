@@ -1,5 +1,6 @@
 import { Choice } from "./Choice";
 import { Form } from "./Form";
+import { UserQuestionMeta } from "./UserQuestionMeta";
 
 export interface Question {
   id: string
@@ -20,4 +21,5 @@ export interface Question {
   required: boolean;
   created_at?: string;
   updated_at?: string;
+  user_question_meta?: UserQuestionMeta
 }

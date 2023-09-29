@@ -81,7 +81,7 @@ const ClientAdminIndex = ({ users, auth }: Props) => {
                   <Link href={route('admin.clientAdmin.edit', { id: user.id })} className="pr-4">編集</Link>
                   {/* <button className="pr-4">csv</button> */}
                   <a className="mr-4" href={route('admin.download.file', {client_user_id: user.id ,filename: user.company + '-' + user.name})}>csv</a>
-                  <a target="_blank" href={route('admin.client.survey.show', { id: user.surveys[0].id })} className="pr-4">アンケート表示</a>
+                  <a target="_blank" href={route('admin.client.survey.show', { id: user.surveys[0].id, user_id: user.id })} className="pr-4">アンケート表示</a>
                 </div>
               </li>
             ))}

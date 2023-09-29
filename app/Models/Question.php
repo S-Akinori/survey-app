@@ -36,4 +36,7 @@ class Question extends Model
     public function answers() {
       return $this->hasMany(Answer::class);
     }
+    public function user_question_meta() {
+      return $this->hasOne(UserQuestionMeta::class, 'question_id');
+    }
 }

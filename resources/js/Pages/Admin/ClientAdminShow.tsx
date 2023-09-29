@@ -26,6 +26,7 @@ const ClientAdminShow = ({ user, auth }: Props) => {
           {user.surveys.map((survey) => (
             <li key={survey.id} className="py-4 border-b"><Link href={route('admin.survey.show', { id: survey.id })}>{survey.title}</Link></li>
           ))}
+          <li className="py-4 border-b"><Link href={route('admin.survey.user.show', { id: 1, user_id: user.id})}>共通質問（表示・非表示設定）</Link></li>
         </ul>
         {/* <div><Button><Link href={route('admin.form.create', { client_admin_id: 1 })}>フォーム作成</Link></Button></div> */}
       </Container>

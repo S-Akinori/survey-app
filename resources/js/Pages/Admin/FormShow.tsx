@@ -47,11 +47,6 @@ const FormShow = ({ form, auth }: Props) => {
         <div className="mb-4">
           <div>{form.description}</div>
         </div>
-        <div className='mb-4'>
-          <FormGroup>
-            <FormControlLabel control={<Checkbox defaultChecked />} label="必須項目にする" />
-          </FormGroup>
-        </div>
         <div className="mb-4">
           <Button><Link href={route('admin.form.edit', { id: form.id })}>フォーム編集</Link></Button>
         </div>

@@ -90,7 +90,7 @@ class ClientController extends Controller
     return $clients;
   }
 
-  public function download(Request $request)
+  public function download(Request $request, $client_user_id)
   {
     Log::debug($request->target);
     $headers = array(
@@ -101,15 +101,16 @@ class ClientController extends Controller
       "Expires" => "0"
     );
 
-    $callback = function () use ($request) {
+    $callback = function () use ($request, $client_user_id) {
       $handle = fopen('php://output', 'w');
       // BOMの追加
       fputs($handle, chr(0xEF) . chr(0xBB) . chr(0xBF));
       Log::debug('open');
       $user = auth()->user();
+      $user_id = $user->id;
 
-      if($user->role === 'admin' && $request->user_id) {
-        $user = User::find($request->user_id);
+      if ($user->role === 'admin' && $client_user_id) {
+        $user_id = $client_user_id;
       }
 
       // CSVヘッダーの書き込み

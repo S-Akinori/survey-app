@@ -17,6 +17,9 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\SurveyController;
 use App\Http\Controllers\SurveyFileController;
+use App\Http\Controllers\UserFormMetaController;
+use App\Http\Controllers\UserQuestionMetaController;
+use App\Http\Controllers\UserSurveyMetaController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
@@ -46,7 +49,7 @@ Route::get('/dashboard', [ClientController::class, 'index'])->middleware(['auth'
 Route::get('/create-list', function () {
     return Inertia::render('CreateList');
 })->middleware(['auth', 'verified'])->name('create-list');
-Route::post('/clients-download', [ClientController::class, 'download'])->name('download');
+Route::get('/clients-download/{client_user_id}', [ClientController::class, 'download'])->name('download');
 Route::post('/answers-download', [SurveyFileController::class, 'download'])->name('answers.download');
 
 Route::middleware(['auth'])->group(function () {
@@ -88,6 +91,8 @@ Route::middleware('admin')->group(function() {
 
   Route::get('/admin/users/{id}', [AdminClientAdminController::class, 'show'])->name('admin.users.show');
   Route::get('/admin/surveys/{id}', [AdminSurveyController::class, 'show'])->name('admin.survey.show');
+  Route::get('/admin/surveys/{id}/users/{user_id}', [UserSurveyMetaController::class, 'show'])->name('admin.survey.user.show');
+  Route::post('/admin/surveys/{id}/users/{user_id}', [UserFormMetaController::class, 'store'])->name('admin.survey.user.store');
   Route::get('/admin/surveys/{survey_id}/forms/create', [FormController::class, 'create'])->name('admin.form.create');
   Route::post('/admin/surveys/{survey_id}/forms/create', [FormController::class, 'store'])->name('admin.form.store');
   Route::get('/admin/clientAdmin/create', [AdminClientAdminController::class, 'create'])->name('admin.clientAdmin.create');
@@ -97,6 +102,8 @@ Route::middleware('admin')->group(function() {
 
   Route::get('/admin/forms', [FormController::class, 'index'])->name('admin.form.index');
   Route::get('/admin/forms/{id}', [FormController::class, 'show'])->name('admin.form.show');
+  Route::get('/admin/forms/{id}/users/{user_id}', [UserFormMetaController::class, 'show'])->name('admin.form.user.show');
+  Route::post('/admin/questions/{id}/users/{user_id}', [UserQuestionMetaController::class, 'store'])->name('admin.question.user.store');
   Route::get('/admin/forms/{id}/edit', [FormController::class, 'edit'])->name('admin.form.edit');
   Route::put('/admin/forms/{id}', [FormController::class, 'update'])->name('admin.form.update');
   Route::delete('/admin/forms/{id}', [FormController::class, 'destroy'])->name('admin.form.destroy');
@@ -111,7 +118,7 @@ Route::middleware('admin')->group(function() {
   Route::get('/admin/client/survey/thanks', function() {
     return Inertia::render('Admin/ClientSurveyThanks');
   })->name('admin.client.survey.thanks');
-  Route::get('/admin/client/survey/{id}', [AdminClientSurveyController::class, 'show'])->name('admin.client.survey.show');
+  Route::get('/admin/client/survey/{id}/users/{user_id}', [AdminClientSurveyController::class, 'show'])->name('admin.client.survey.show');
 
   Route::get('/download-file/{client_user_id}/{filename}', [SurveyFileController::class, 'download'])->name('admin.download.file');
 });

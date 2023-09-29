@@ -15,7 +15,7 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 class SurveyFileController extends Controller
 {
   //
-  public function download(Request $request, $client_user_id, $filename)
+  public function download(Request $request, $client_user_id)
   {
     $headers = array(
       "Content-type" => "text/csv; charset=UTF-8",
@@ -25,7 +25,7 @@ class SurveyFileController extends Controller
       "Expires" => "0"
     );
 
-    $callback = function () use ($request, $client_user_id, $filename) {
+    $callback = function () use ($request, $client_user_id) {
 
       $handle = fopen('php://output', 'w');
       // $csvFileName = $filename.'.csv';
@@ -44,19 +44,12 @@ class SurveyFileController extends Controller
 
       Log::debug('ユーザーID:' . $user_id . 'のアンケートを取得しました');
       $questions = [];
-      $titles = ['タイムスタンプ', 'ID'];
+      $titles = ['タイムスタンプ', 'ID', '属性1', '属性2', '属性3', '属性4', '属性5'];
       $scales = [];
 
       Log::debug(count($surveys) . "件のアンケートがあります");
 
       foreach ($surveys as $survey) {
-        if ($survey->id == 1) {
-          $blanks = [];
-          for ($i = 0; $i < 7 - count($titles); $i++) {
-            $blanks[] = '';
-          }
-          $titles = array_merge($titles, $blanks);
-        }
         foreach ($survey->forms as $form) {
           foreach ($form->questions as $question) {
             $questions[] = $question;

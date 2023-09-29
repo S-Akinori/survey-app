@@ -30,4 +30,7 @@ class Form extends Model
   public function survey() {
     return $this->belongsTo(Survey::class);
   }
+  public function user_form_meta() {
+    return $this->hasOne(UserFormMeta::class, 'form_id');
+  }
 }

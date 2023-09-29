@@ -62,7 +62,7 @@ const FormShow = ({ survey, auth }: Props) => {
           <Button><Link href={route('admin.form.create', { survey_id: survey.id })}>新規フォーム作成</Link></Button>
         </div> */}
         <div className="mb-4">
-          <Button><a href={route('admin.client.survey.show', { id: survey.id })} target="_blank">アンケートを表示する</a></Button>
+          <Button><a href={route('admin.client.survey.show', { id: survey.id, user_id: survey.user_id })} target="_blank">アンケートを表示する</a></Button>
         </div>
         <div className="mb-4">
           <Button onClick={e => setCopy(true)}>アンケートURLを発行</Button>

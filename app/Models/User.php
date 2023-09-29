@@ -25,6 +25,7 @@ class User extends Authenticatable
     'end_date',
     'email',
     'password',
+    'role',
   ];
 
   /**
@@ -55,6 +56,14 @@ class User extends Authenticatable
   public function surveys()
   {
     return $this->hasMany(Survey::class);
+  }
+  public function userFormMetas()
+  {
+    return $this->hasMany(UserFormMeta::class);
+  }
+  public function userQuestionMetas()
+  {
+    return $this->hasMany(UserQuestionMeta::class);
   }
   public function isAdmin()
   {
