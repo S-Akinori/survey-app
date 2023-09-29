@@ -39,7 +39,7 @@ const createInitialData = (response: Response, survey: Survey): InputProps => {
 
 const SurveyShow = ({ auth, survey, response, flash }: Props) => {
   const { data, setData, post, put, processing, errors, reset } = useForm<InputProps>(createInitialData(response, survey));
-  console.log(data)
+  console.log(auth.user)
   const onChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement> | SelectChangeEvent) => {
     const name = e.target.name
     const value = e.target.value

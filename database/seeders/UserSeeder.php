@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Carbon\Carbon;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use Illuminate\Support\Str;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -25,6 +26,7 @@ class UserSeeder extends Seeder
       'role' => 'admin',
       'start_date' => Carbon::parse('2023-09-01'),
       'end_date' => Carbon::parse('2023-09-10'),
+      'token' => Str::uuid(),
     ]);
   }
 }

@@ -11,11 +11,13 @@ import Button from '@/Components/Button';
 export default function ClientLogin({ status, canResetPassword, message }: { status?: string, canResetPassword: boolean, message?: string }) {
   const params = new URLSearchParams(window.location.search);
   const user_id = params.get('user_id');
+  const token = params.get('token');
   const { data, setData, post, processing, errors, reset } = useForm({
     client_id: '',
     password: '',
     remember: false,
-    user_id: user_id ?? ''
+    user_id: user_id ?? '',
+    token: token ?? ''
   });
 
   const submit: FormEventHandler = (e) => {
