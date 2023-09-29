@@ -21,18 +21,25 @@ interface InputProps {
   [key: string]: string
 }
 
-const createInitialData = ( response: Response): InputProps => {
+const createInitialData = (response: Response, survey: Survey): InputProps => {
   let data: InputProps = {}
-  if(!response.answers) return data
-  response.answers.map((answer: Answer) => {
-    data['q_' + answer.question_id] = answer.value
-  })
+  if (!response) {
+    survey.forms.map((form) => {
+      form.questions.map((question) => {
+        data['q_' + question.id] = ''
+      })
+    })
+  } else {
+    response.answers.map((answer: Answer) => {
+      data['q_' + answer.question_id] = answer.value
+    })
+  }
   return data
 }
 
 const SurveyShow = ({ auth, survey, response, flash }: Props) => {
-  const { data, setData, post, put, processing, errors, reset } = useForm<InputProps>(response ? createInitialData(response) : {});
-
+  const { data, setData, post, put, processing, errors, reset } = useForm<InputProps>(createInitialData(response, survey));
+  console.log(data)
   const onChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement> | SelectChangeEvent) => {
     const name = e.target.name
     const value = e.target.value
@@ -40,23 +47,23 @@ const SurveyShow = ({ auth, survey, response, flash }: Props) => {
     setData(newData)
   }
 
+  useEffect(() => {
+    setData(createInitialData(response, survey))
+  }, [survey.id])
+
   const submit: FormEventHandler = (e) => {
     e.preventDefault();
     console.log(data)
-    return
-    if(!response) { //未回答の場合は新規回答
-      console.log('store')
+    if (!response) { //未回答の場合は新規回答
       post(route('client.survey.store', { survey_id: survey.id }));
     } else {
-      console.log('update')
       put(route('client.survey.update', { survey_id: survey.id }));
     }
-    reset()
   };
   return (
     <ClientAuthenicatedLayout
       user={auth.user}
-      // header={<h2 className="font-semibold leading-tight">{auth.user.name}</h2>}
+    // header={<h2 className="font-semibold leading-tight">{auth.user.name}</h2>}
     >
       <Container className='py-12'>
         <div>
@@ -165,7 +172,7 @@ const SurveyShow = ({ auth, survey, response, flash }: Props) => {
                                 rows={4}
                                 required
                               />
-                            <div>{data['q_' + question.id] ? data['q_' + question.id].length : 0}文字</div>
+                              <div>{data['q_' + question.id] ? data['q_' + question.id].length : 0}文字</div>
                             </div>
                           )}
                           {question.type === 'dropdown' && question.choices && (

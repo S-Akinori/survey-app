@@ -2,7 +2,7 @@ import React from "react";
 
 import AdminAuthenticatedLayout from "../../Layouts/AdminAuthenticatedLayout";
 import { PageProps } from '@/types';
-import { Box, Container, FormControl, MenuItem, Modal, Select, TextField } from "@mui/material";
+import { Box, Checkbox, Container, FormControl, FormControlLabel, FormGroup, MenuItem, Modal, Select, TextField } from "@mui/material";
 import { Question } from "../../types/Question";
 import { Link, router } from "@inertiajs/react";
 import Button from "@/Components/Button";
@@ -40,12 +40,17 @@ const FormShow = ({ form, auth }: Props) => {
           <div className="mb-4">
             <Link href={route('admin.survey.show', { id: form.survey?.id })}><ArrowBackIcon />フォーム一覧へ</Link>
           </div>
-          )}
+        )}
         <div className="mb-4">
           <Title title={form.title} Tag="h2" className="bg-main text-main-cont p-4 mb-4" />
         </div>
         <div className="mb-4">
           <div>{form.description}</div>
+        </div>
+        <div className='mb-4'>
+          <FormGroup>
+            <FormControlLabel control={<Checkbox defaultChecked />} label="必須項目にする" />
+          </FormGroup>
         </div>
         <div className="mb-4">
           <Button><Link href={route('admin.form.edit', { id: form.id })}>フォーム編集</Link></Button>
