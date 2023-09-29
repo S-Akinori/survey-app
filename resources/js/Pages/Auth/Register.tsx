@@ -111,7 +111,7 @@ export default function Register({ auth }: PageProps) {
       user={auth.user}
       header={<h2 className="font-semibold leading-tight">{auth.user.name}</h2>}
     >
-      <Head title="Register" />
+      <Head title="クライアント登録" />
 
       <Container className='py-12'>
         <form onSubmit={submit}>

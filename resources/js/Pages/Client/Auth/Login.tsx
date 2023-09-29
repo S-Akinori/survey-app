@@ -5,8 +5,14 @@ import InputError from '@/Components/InputError';
 import InputLabel from '@/Components/InputLabel';
 import PrimaryButton from '@/Components/PrimaryButton';
 import TextInput from '@/Components/TextInput';
-import { Head, Link, useForm } from '@inertiajs/react';
+import { Head, Link, useForm, usePage } from '@inertiajs/react';
 import Button from '@/Components/Button';
+
+interface FormErrors {
+  client_id?: string;
+  password?: string;
+  failed?: string;
+}
 
 export default function ClientLogin({ status, canResetPassword, message }: { status?: string, canResetPassword: boolean, message?: string }) {
   const params = new URLSearchParams(window.location.search);
@@ -20,6 +26,8 @@ export default function ClientLogin({ status, canResetPassword, message }: { sta
     token: token ?? ''
   });
 
+  console.log(errors)
+
   const submit: FormEventHandler = (e) => {
     e.preventDefault();
     setData('password', data.client_id)
@@ -29,7 +37,7 @@ export default function ClientLogin({ status, canResetPassword, message }: { sta
 
   return (
     <GuestLayout title='Cultivate Survey'>
-      <Head title="Log in" />
+      <Head title="ログイン" />
 
       {status && <div className="mb-4 font-medium text-sm text-green-600">{status}</div>}
 
@@ -50,6 +58,11 @@ export default function ClientLogin({ status, canResetPassword, message }: { sta
 
           <InputError message={errors.client_id} className="mt-2" />
         </div>
+        {(errors as {failed: string}).failed && (
+          <div className='mt-4 text-center'>
+            <div className="mb-4 font-medium text-sm text-red-600">ログインに失敗しました</div>
+          </div>
+        )}
         <div className="text-center mt-4">
           <Button className="ml-4" disabled={processing}>
             ログイン
