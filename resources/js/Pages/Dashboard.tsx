@@ -58,12 +58,11 @@ export default function Dashboard({ auth, clientData, target = 'all', total, ans
   const [answeredClients, setAnsweredClients] = useState<Client[]>([])
   const [noAnsweredClients, setNoAnsweredClients] = useState<Client[]>([])
 
-  console.log(user_id)
-  console.log(auth.user.id)
+  console.log(answerTotal)
 
   useEffect(() => {
-    const answeredClients = clientData.data.filter(client => client.responses.length >= 2)
-    const noAnsweredClients = clientData.data.filter(client => client.responses.length < 2)
+    const answeredClients = clientData.data.filter(client => client.responses.some(response => response.survey_id == 1))
+    const noAnsweredClients = clientData.data.filter(client =>     client.responses.some(response => response.survey_id != 1))
     setAnsweredClients(answeredClients)
     setNoAnsweredClients(noAnsweredClients)
   }, [])

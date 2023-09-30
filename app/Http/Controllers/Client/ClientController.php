@@ -25,15 +25,21 @@ class ClientController extends Controller
     }
     $query = Client::query();
     if ($request->target === 'answer') {
-      $query->with('responses')->where('user_id', $user_id)->has('responses', '>=', 2);
+      $query->with('responses')->whereHas('responses.survey', function($query) {
+        $query->where('id', 1);
+      })->where('user_id', $user_id);
     } else if ($request->target === 'no-answer') {
-      $query->with('responses')->where('user_id', $user_id)->has('responses', '<', 2);
+      $query->with('responses')->whereDoesntHave('responses.survey', function($query) {
+        $query->where('id', 1);
+      })->where('user_id', $user_id);
     } else {
       $query->with('responses')->where('user_id', $user_id);
     }
     $clientData = $query->paginate(20);
     $total = Client::where('user_id', $user_id)->count();
-    $answerTotal = Client::where('user_id', $user_id)->has('responses', '>=', 2)->count();
+    $answerTotal = Client::with('responses')->whereHas('responses.survey', function($query) {
+      $query->where('id', 1);
+    })->where('user_id', $user_id)->count();
     return Inertia::render('Dashboard', [
       'clientData' => $clientData,
       'target' => $request->target ?? 'all',
@@ -114,18 +120,22 @@ class ClientController extends Controller
       }
 
       // CSVヘッダーの書き込み
-      fputcsv($handle, ['id', 'client_id', 'status', 'submitted_at', 'created_at']);
+      fputcsv($handle, ['id', '従業員ID', '状況', '回答日時', '登録日時']);
 
       $query = Client::query();
       $status = '';
       if ($request->target === 'answer') {
-        $clients = $query->with('responses')->where('user_id', $user_id)->has('responses', '>=', 2)->get();
+        $clients = $query->with('responses')->whereHas('responses.survey', function($query) {
+          $query->where('id', 1);
+        })->where('user_id', $user_id)->get();
         $status = '回答済み';
         foreach ($clients as $client) {
           fputcsv($handle, [$client->id, $client->client_id, $status, $client->responses[1]->submitted_at, $client->created_at]);
         }
       } else if ($request->target === 'no-answer') {
-        $clients = $query->with('responses')->where('user_id', $user_id)->has('responses', '<', 2)->get();
+        $clients = $query->with('responses')->whereDoesntHave('responses.survey', function($query) {
+          $query->where('id', 1);
+        })->where('user_id', $user_id)->get();
         $status = '未回答';
         foreach ($clients as $client) {
           fputcsv($handle, [$client->id, $client->client_id, $status, '', $client->created_at]);

@@ -46,6 +46,7 @@ const FormShow = ({ survey, auth }: Props) => {
           <div className="mb-4">
             <p>【フォーム一覧】</p>
             <p>ここに登録されたフォームが個別質問になります。</p>
+            <p>※フォーム詳細より質問を作成できます。質問がない場合、このアンケートは表示されず共通アンケートのみ表示されます。</p>
           </div>
           {survey.forms.map((form) => (
             <div key={form.id} className="mb-12">

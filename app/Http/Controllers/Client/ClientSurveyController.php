@@ -26,7 +26,7 @@ class ClientSurveyController extends Controller
     if($id != 1 && $client->user_id != $survey->user_id) {
       return redirect()->route('client.login');
     } else if($survey->forms->count() == 0 || $survey->forms->first()->questions->count() == 0) {
-      return redirect()->route('admin.client.survey.show', ['id' => 1, 'user_id' => $user_id]);
+      return redirect()->route('client.survey.show', ['id' => 1, 'user_id' => $user_id]);
     } else {
       return Inertia::render('Client/SurveyShow', ['survey' => $survey, 'response' => $response]);
     }
