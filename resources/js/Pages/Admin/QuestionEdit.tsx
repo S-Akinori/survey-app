@@ -114,7 +114,7 @@ const QuestionEdit = ({ auth, question }: Props) => {
       user={auth.user}
       header={<h2 className="font-semibold leading-tight">{question.form?.survey?.user?.company} | {question.form?.survey?.user?.name} 様</h2>}
     >
-      <Head title="管理者ページ" />
+      <Head title="質問編集" />
 
       <Container className='py-12'>
         <h2 className='mb-4'>質問編集</h2>

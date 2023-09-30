@@ -50,6 +50,7 @@ class SurveyFileController extends Controller
       Log::debug(count($surveys) . "件のアンケートがあります");
 
       foreach ($surveys as $survey) {
+        if($survey->id != 1) continue;
         foreach ($survey->forms as $form) {
           foreach ($form->questions as $question) {
             $questions[] = $question;

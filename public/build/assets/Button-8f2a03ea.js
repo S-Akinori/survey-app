@@ -1,0 +1,1 @@
+import{j as i}from"./app-9ca37bac.js";const r=({className:n="",disabled:t,children:o,...e})=>i.jsx("button",{...e,className:`inline-flex items-center px-4 py-2 bg-main text-main-cont rounded-full hover:opacity-90 transition duration-300 ${t&&"opacity-25"} `+n,disabled:t,children:o}),a=r;export{a as B};

@@ -14,12 +14,19 @@ use Inertia\Inertia;
 class ClientSurveyController extends Controller
 {
   public function show($id) {
-    $survey = Survey::with(['forms.questions.scale', 'forms.questions.choices'])->find($id);
+    $user_id = Auth::guard('client')->user()->user_id;
+    $survey = Survey::with(['forms.questions.scale', 'forms.questions.choices', 'forms.user_form_meta' => function ($query) use ($user_id) {
+      $query->where('user_id', $user_id);
+    }, 'forms.questions.user_question_meta' => function ($query) use ($user_id) {
+      $query->where('user_id', $user_id);
+  }])->find($id);
     $response = Response::with('answers')->where('client_id', Auth::guard('client')->user()->id)->where('survey_id', $id)->first();
     $client = Auth::guard('client')->user();
     Log::debug($client);
     if($id != 1 && $client->user_id != $survey->user_id) {
       return redirect()->route('client.login');
+    } else if($survey->forms->count() == 0 || $survey->forms->first()->questions->count() == 0) {
+      return redirect()->route('admin.client.survey.show', ['id' => 1, 'user_id' => $user_id]);
     } else {
       return Inertia::render('Client/SurveyShow', ['survey' => $survey, 'response' => $response]);
     }

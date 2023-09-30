@@ -102,7 +102,7 @@ export default function Dashboard({ auth, clientData, target = 'all', total, ans
       user={auth.user}
       header={<h2 className="font-semibold leading-tight">{auth.user.name}</h2>}
     >
-      <Head title="クライアント管理者ダッシュボード" />
+      <Head title={auth.user.name + "様ダッシュボード"} />
 
       <Container className='py-12'>
         <div className=''>

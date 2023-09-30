@@ -1,5 +1,5 @@
 import React, { FormEventHandler, SyntheticEvent, useEffect } from "react";
-import { Link, router } from '@inertiajs/react';
+import { Head, Link, router } from '@inertiajs/react';
 import { Survey } from "@/types/Survey";
 import { Container, FormControl, FormControlLabel, MenuItem, Radio, RadioGroup, Select, SelectChangeEvent, TextField } from "@mui/material";
 import Title from "@/Components/Title";
@@ -58,6 +58,7 @@ const ClientSurveyShow = ({ auth, survey, response, flash, user_id }: Props) => 
       user={auth.user}
     // header={<h2 className="font-semibold leading-tight">{auth.user.name}</h2>}
     >
+      <Head title={survey.title} />
       <Container className='py-12'>
         <div>
           <form onSubmit={submit}>
@@ -65,8 +66,9 @@ const ClientSurveyShow = ({ auth, survey, response, flash, user_id }: Props) => 
               <div className="text-center mb-8">
                 <ApplicationLogo width={70} height={70} className="mx-auto" />
                 <Title Tag="h1" title={survey.title} />
+                <p className="text-sm mt-4">*は必須項目</p>
               </div>
-              {survey.forms.map((form) => (form.user_form_meta?.value != 0 )&& (
+              {survey.forms.map((form) => (form.user_form_meta?.value != 0 ) && (
                 <div key={form.id}>
                   <Title title={form.title} Tag="h3" className="p-4 mb-4 bg-main text-main-cont" />
                   <div>
@@ -74,9 +76,9 @@ const ClientSurveyShow = ({ auth, survey, response, flash, user_id }: Props) => 
                       <>
                         {question.user_question_meta?.value != 0 && (
                           <div key={question.id} className="mb-16">
+                            <Title title={question.required ? question.title + '*' : question.title} Tag="h4" className="py-4 mb-4 border-b-2 border-main" />
                             {question.type === 'scale' && question.scale && (
                               <div>
-                                <Title title={question.title} Tag="h4" className="py-4 mb-4 border-b-2 border-main" />
                                 <div className="mb-20">
                                   <div className="md:flex justify-between">
                                     <BorderBox>A: {question.scale.min_text}</BorderBox>
@@ -133,7 +135,6 @@ const ClientSurveyShow = ({ auth, survey, response, flash, user_id }: Props) => 
                             )}
                             {question.type === 'text' && (
                               <div>
-                                <Title title={question.title} Tag="h4" className="py-4 mb-4 border-b-2 border-main" />
                                 <TextField
                                   id={'q_' + question.id}
                                   type="text"
@@ -142,12 +143,12 @@ const ClientSurveyShow = ({ auth, survey, response, flash, user_id }: Props) => 
                                   variant='outlined'
                                   onChange={onChange}
                                   fullWidth
+                                  required={question.required}
                                 />
                               </div>
                             )}
                             {question.type === 'textarea' && (
                               <div>
-                                <Title title={question.title} Tag="h4" className="py-4 mb-4 border-b-2 border-main" />
                                 <TextField
                                   id={'q_' + question.id}
                                   type="text"
@@ -158,13 +159,13 @@ const ClientSurveyShow = ({ auth, survey, response, flash, user_id }: Props) => 
                                   fullWidth
                                   multiline
                                   rows={4}
+                                  required={question.required}
                                 />
                                 <div>{data['q_' + question.id] ? data['q_' + question.id].length : 0}文字</div>
                               </div>
                             )}
                             {question.type === 'dropdown' && question.choices && (
                               <div>
-                                <Title title={question.title} Tag="h4" className="py-4 mb-4 border-b-2 border-main" />
                                 <FormControl fullWidth>
                                   <Select
                                     labelId='type'
@@ -172,6 +173,7 @@ const ClientSurveyShow = ({ auth, survey, response, flash, user_id }: Props) => 
                                     name={'q_' + question.id}
                                     value={data['q_' + question.id] ? data['q_' + question.id] : question.choices[0].value}
                                     onChange={onChange}
+                                    required={question.required}
                                   >
                                     {question.choices.map((choice, index) => (
                                       <MenuItem key={choice.id} value={choice.value}>{choice.title}</MenuItem>

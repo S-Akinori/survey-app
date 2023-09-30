@@ -39,7 +39,7 @@ const FormEdit = ({ auth, form }: Props) => {
       user={auth.user}
       header={<h2 className="font-semibold leading-tight">{form.survey?.user?.company} | {form.survey?.user?.name} 様</h2>}
     >
-      <Head title="管理者ページ" />
+      <Head title="フォーム編集" />
 
       <Container className='py-12'>
         <h2 className='mb-4'>フォーム編集</h2>

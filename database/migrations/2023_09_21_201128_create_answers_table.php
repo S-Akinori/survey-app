@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('response_id')->constrained()->onDelete('cascade');
             $table->foreignId('question_id')->constrained()->onDelete('cascade');
-            $table->text('value');
+            $table->text('value')->nullable()->default('');
             $table->timestamps();
             $table->unique(['response_id', 'question_id']); // ユニークキーを追加
         });

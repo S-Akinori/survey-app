@@ -4,7 +4,7 @@ import AdminAuthenticatedLayout from "../../Layouts/AdminAuthenticatedLayout";
 import { PageProps } from '@/types';
 import { Box, Checkbox, Container, FormControl, FormControlLabel, FormGroup, MenuItem, Modal, Select, TextField } from "@mui/material";
 import { Question } from "../../types/Question";
-import { Link, router } from "@inertiajs/react";
+import { Head, Link, router } from "@inertiajs/react";
 import Button from "@/Components/Button";
 import Title from "@/Components/Title";
 import QuestionScale from "@/Components/QuestionScale";
@@ -35,6 +35,7 @@ const FormShow = ({ form, auth }: Props) => {
       user={auth.user}
       header={<h2 className="font-semibold leading-tight">{form.survey?.user?.company} | {form.survey?.user?.name} 様</h2>}
     >
+      <Head title={form.title} />
       <Container className="py-12">
         {form.survey && (
           <div className="mb-4">
@@ -94,7 +95,7 @@ const FormShow = ({ form, auth }: Props) => {
                       labelId='type'
                       id='type'
                       name='type'
-                      defaultValue={question.choices && question.choices[0].value}
+                      defaultValue={(question.choices?.length) ? question.choices[0].value : ''}
                     // label="質問タイプ"
                     >
                       {question.choices && question.choices.map((choice, index) => (

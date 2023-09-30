@@ -60,6 +60,8 @@ const SurveyShow = ({ auth, survey, response, flash }: Props) => {
       put(route('client.survey.update', { survey_id: survey.id }));
     }
   };
+  console.log(survey)
+  console.log(data)
   return (
     <ClientAuthenicatedLayout
       user={auth.user}
@@ -79,15 +81,15 @@ const SurveyShow = ({ auth, survey, response, flash }: Props) => {
                   <ApplicationLogo width={70} height={70} className="mx-auto" />
                   <Title Tag="h1" title={survey.title} />
                 </div>
-                {survey.forms.map((form) => (
+                {survey.forms.map((form) => (form.user_form_meta?.value != 0 ) && (
                   <div key={form.id}>
                     <Title title={form.title} Tag="h3" className="p-4 mb-4 bg-main text-main-cont" />
                     <div>
-                      {form.questions.map((question, index) => (
+                      {form.questions.map((question, index) => (question.user_question_meta?.value != 0 ) && (
                         <div key={question.id} className="mb-16">
+                          <Title title={question.required ? question.title + '*' : question.title} Tag="h4" className="py-4 mb-4 border-b-2 border-main" />
                           {question.type === 'scale' && question.scale && (
                             <div>
-                              <Title title={question.title + '*'} Tag="h4" className="py-4 mb-4 border-b-2 border-main" />
                               <div className="mb-20">
                                 <div className="md:flex justify-between">
                                   <BorderBox>A: {question.scale.min_text}</BorderBox>
@@ -103,7 +105,7 @@ const SurveyShow = ({ auth, survey, response, flash }: Props) => {
                                   >
                                     <FormControlLabel
                                       value="1"
-                                      control={<Radio onChange={onChange} />}
+                                      control={<Radio onChange={onChange} required={Boolean(question.required)} />}
                                       label="Aに近い"
                                       labelPlacement="bottom"
                                       id={'q_' + question.id}
@@ -144,7 +146,6 @@ const SurveyShow = ({ auth, survey, response, flash }: Props) => {
                           )}
                           {question.type === 'text' && (
                             <div>
-                              <Title title={question.title + '*'} Tag="h4" className="py-4 mb-4 border-b-2 border-main" />
                               <TextField
                                 id={'q_' + question.id}
                                 type="text"
@@ -153,13 +154,12 @@ const SurveyShow = ({ auth, survey, response, flash }: Props) => {
                                 variant='outlined'
                                 onChange={onChange}
                                 fullWidth
-                                required
+                                required={Boolean(question.required)}
                               />
                             </div>
                           )}
                           {question.type === 'textarea' && (
                             <div>
-                              <Title title={question.title + '*'} Tag="h4" className="py-4 mb-4 border-b-2 border-main" />
                               <TextField
                                 id={'q_' + question.id}
                                 type="text"
@@ -170,14 +170,13 @@ const SurveyShow = ({ auth, survey, response, flash }: Props) => {
                                 fullWidth
                                 multiline
                                 rows={4}
-                                required
+                                required={Boolean(question.required)}
                               />
                               <div>{data['q_' + question.id] ? data['q_' + question.id].length : 0}文字</div>
                             </div>
                           )}
                           {question.type === 'dropdown' && question.choices && (
                             <div>
-                              <Title title={question.title + '*'} Tag="h4" className="py-4 mb-4 border-b-2 border-main" />
                               <FormControl fullWidth>
                                 <Select
                                   labelId='type'
@@ -185,6 +184,7 @@ const SurveyShow = ({ auth, survey, response, flash }: Props) => {
                                   name={'q_' + question.id}
                                   value={data['q_' + question.id]}
                                   onChange={onChange}
+                                  required={Boolean(question.required)}
                                 >
                                   {question.choices.map((choice, index) => (
                                     <MenuItem key={choice.id} value={choice.value}>{choice.title}</MenuItem>

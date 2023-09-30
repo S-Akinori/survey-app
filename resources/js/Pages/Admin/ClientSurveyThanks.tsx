@@ -6,7 +6,7 @@ import { BorderBox } from "@/Components/Box";
 import ClientAuthenicatedLayout from "@/Layouts/ClientAuthenticatedLayout";
 import { PageProps } from "@/types";
 import ApplicationLogo from "@/Components/ApplicationLogo";
-import { useForm } from "@inertiajs/react";
+import { Head, useForm } from "@inertiajs/react";
 import Button from "@/Components/Button";
 import { Answer } from "@/types/Answer";
 import { Response } from "@/types/Response";
@@ -22,6 +22,7 @@ const AdminClientSurveyThanks = ({ auth}: Props) => {
       user={auth.user}
       header={<h2 className="font-semibold leading-tight">{auth.user.name}</h2>}
     >
+      <Head title="ご回答ありがとうございました" />
       <Container className='py-12'>
         ご回答ありがとうございました。
         ※これは管理者チェックのため実際の回答は保存されていません。
