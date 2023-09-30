@@ -58,6 +58,9 @@ export default function Dashboard({ auth, clientData, target = 'all', total, ans
   const [answeredClients, setAnsweredClients] = useState<Client[]>([])
   const [noAnsweredClients, setNoAnsweredClients] = useState<Client[]>([])
 
+  console.log(user_id)
+  console.log(auth.user.id)
+
   useEffect(() => {
     const answeredClients = clientData.data.filter(client => client.responses.length >= 2)
     const noAnsweredClients = clientData.data.filter(client => client.responses.length < 2)
@@ -179,7 +182,7 @@ export default function Dashboard({ auth, clientData, target = 'all', total, ans
             </div>
           </div>
           <div className='mt-4 text-center'>
-            <Button><a href={route('download', {target: target, client_user_id: user_id ?? auth.user.id})}>CSVダウンロード</a></Button>
+            <Button><a href={route('download', {target: target, client_user_id: user_id ? user_id : auth.user.id})}>CSVダウンロード</a></Button>
           </div>
         </div>
       </Container>
