@@ -73,7 +73,7 @@ export default function Login({ status, canResetPassword }: { status?: string, c
                 </div>
                 <div className='text-main text-center mt-4'>
                   パスワードを忘れた場合は、以下までメールをご送付下さい。<br />
-                  passremainder@xxx.jp
+                  <a href='mailto:password@cultivate-survey.com'>password@cultivate-survey.com</a>
                 </div>
             </form>
         </GuestLayout>
