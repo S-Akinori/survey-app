@@ -143,7 +143,7 @@ class ClientController extends Controller
       } else {
         $clients = $query->with('responses')->where('user_id', $user_id)->get();
         foreach ($clients as $client) {
-          $status = $client->responses->where('id', 1)->first() ? '回答済み' : '未回答';
+          $status = $client->responses->where('survey_id', 1)->first() ? '回答済み' : '未回答';
           $submitted_at = $status === '回答済み' ? $client->responses[1]->submitted_at : '';
           fputcsv($handle, [$client->id, $client->client_id, $status, $submitted_at, $client->created_at]);
         }
