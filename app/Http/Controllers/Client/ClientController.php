@@ -130,7 +130,7 @@ class ClientController extends Controller
         })->where('user_id', $user_id)->get();
         $status = '回答済み';
         foreach ($clients as $client) {
-          fputcsv($handle, [$client->id, $client->client_id, $status, $client->responses[1]->submitted_at, $client->created_at]);
+          fputcsv($handle, [$client->id, $client->client_id, $status, $client->responses[0]->submitted_at, $client->created_at]);
         }
       } else if ($request->target === 'no-answer') {
         $clients = $query->with('responses')->whereDoesntHave('responses.survey', function($query) {
@@ -144,7 +144,7 @@ class ClientController extends Controller
         $clients = $query->with('responses')->where('user_id', $user_id)->get();
         foreach ($clients as $client) {
           $status = $client->responses->where('survey_id', 1)->first() ? '回答済み' : '未回答';
-          $submitted_at = $status === '回答済み' ? $client->responses[1]->submitted_at : '';
+          $submitted_at = $status === '回答済み' ? $client->responses->where('survey_id', 1)->first()->submitted_at : '';
           fputcsv($handle, [$client->id, $client->client_id, $status, $submitted_at, $client->created_at]);
         }
       }

@@ -85,7 +85,7 @@ class SurveyFileController extends Controller
             $contents[] = $response->created_at;
             $contents[] = $response->client->client_id;
           }
-          if ($count === 1) {
+          if ($response->survey_id == 1) {
             $blanks = [];
             for ($i = 0; $i < 7 - count($contents); $i++) {
               $blanks[] = '';
