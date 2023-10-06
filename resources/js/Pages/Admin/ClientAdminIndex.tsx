@@ -74,9 +74,9 @@ const ClientAdminIndex = ({ users, auth }: Props) => {
           <Title title="クライアント一覧" Tag="h2" className="bg-main text-main-cont p-4 mb-4" />
           <ul className="mb-4">
             {users.map((user) => (
-              <li key={user.id} className="py-4 border-b flex justify-between">
+              <li key={user.id} className="py-4 border-b md:flex justify-between">
                 <Link href={route('admin.users.show', { id: user.id })}>{user.company} : {user.name}</Link>
-                <div>
+                <div className="mt-4 md:mt-0">
                   <a target="_blank" href={route('dashboard', { user_id: user.id })} className="pr-4">回答状況</a>
                   <Link href={route('admin.clientAdmin.edit', { id: user.id })} className="pr-4">編集</Link>
                   {/* <button className="pr-4">csv</button> */}

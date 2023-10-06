@@ -7,7 +7,7 @@ export default function Welcome({ auth, laravelVersion, phpVersion }: PageProps<
   return (
     <>
       <Head title="Welcome" />
-      <div className="relative sm:flex sm:justify-center sm:items-center min-h-screen bg-dots-darker bg-center bg-base-cont dark:bg-dots-lighter dark:bg-gray-900 selection:bg-red-500 selection:text-white">
+      <div className="relative flex justify-center items-center min-h-screen bg-dots-darker bg-center bg-base-cont dark:bg-dots-lighter dark:bg-gray-900 selection:bg-red-500 selection:text-white">
         <div>
           <div className='text-center mb-4'>
             <ApplicationLogo width={100} height={100} className='mx-auto' />

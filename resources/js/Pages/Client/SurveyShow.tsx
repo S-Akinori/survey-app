@@ -1,4 +1,4 @@
-import React, { FormEventHandler, SyntheticEvent, useEffect } from "react";
+import React, { FormEventHandler, SyntheticEvent, useEffect, useState } from "react";
 import { Survey } from "@/types/Survey";
 import { Container, FormControl, FormControlLabel, MenuItem, Radio, RadioGroup, Select, SelectChangeEvent, TextField } from "@mui/material";
 import Title from "@/Components/Title";
@@ -10,6 +10,7 @@ import { useForm } from "@inertiajs/react";
 import Button from "@/Components/Button";
 import { Answer } from "@/types/Answer";
 import { Response } from "@/types/Response";
+import ScaleInputGroup from "@/Components/ScaleInputGroup";
 
 interface Props {
   auth: PageProps['auth'];
@@ -38,8 +39,9 @@ const createInitialData = (response: Response, survey: Survey): InputProps => {
 }
 
 const SurveyShow = ({ auth, survey, response, flash }: Props) => {
+  const [requiredIds, setRequiredIds] = useState<string[]>([])
+  const [error, setError] = useState('')
   const { data, setData, post, put, processing, errors, reset } = useForm<InputProps>(createInitialData(response, survey));
-  console.log(auth.user)
   const onChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement> | SelectChangeEvent) => {
     const name = e.target.name
     const value = e.target.value
@@ -49,19 +51,49 @@ const SurveyShow = ({ auth, survey, response, flash }: Props) => {
 
   useEffect(() => {
     setData(createInitialData(response, survey))
+    const requiredIds: string[] = survey.forms.reduce((accumulator: string[], form) => {
+      // user_form_metaがオブジェクトでvalueが0の場合はスキップ
+      if (form.user_form_meta && form.user_form_meta.value === 0) {
+        return accumulator;
+      }
+
+      const ids = form.questions
+        .filter((q) => {
+          // user_question_metaがオブジェクトでvalueが0の場合はフィルタリング
+          if (q.user_question_meta && q.user_question_meta.value === 0) {
+            return false;
+          }
+          return q.required;
+        })
+        .map((q) => `q_${q.id}`);
+
+      return accumulator.concat(ids);
+    }, []);
+    setRequiredIds(requiredIds)
   }, [survey.id])
 
   const submit: FormEventHandler = (e) => {
     e.preventDefault();
     console.log(data)
+    const isValid = validation();
+    if (!isValid) return
     if (!response) { //未回答の場合は新規回答
       post(route('client.survey.store', { survey_id: survey.id }));
     } else {
       put(route('client.survey.update', { survey_id: survey.id }));
     }
   };
-  console.log(survey)
-  console.log(data)
+
+  const validation = () => {
+    const missingIds = requiredIds.filter(id => !data[id]);
+    console.log(missingIds)
+    if (missingIds.length) {
+      alert('未入力の項目があります。')
+      return false
+    } else {
+      return true
+    }
+  }
   return (
     <ClientAuthenicatedLayout
       user={auth.user}
@@ -81,66 +113,26 @@ const SurveyShow = ({ auth, survey, response, flash }: Props) => {
                   <ApplicationLogo width={70} height={70} className="mx-auto" />
                   <Title Tag="h1" title={survey.title} />
                 </div>
-                {survey.forms.map((form) => (form.user_form_meta?.value != 0 ) && (
+                {survey.forms.map((form) => (form.user_form_meta?.value != 0) && (
                   <div key={form.id}>
                     <Title title={form.title} Tag="h3" className="p-4 mb-4 bg-main text-main-cont" />
                     <div>
-                      {form.questions.map((question, index) => (question.user_question_meta?.value != 0 ) && (
+                      {form.questions.map((question, index) => (question.user_question_meta?.value != 0) && (
                         <div key={question.id} className="mb-16">
                           <Title title={question.required ? question.title + '*' : question.title} Tag="h4" className="py-4 mb-4 border-b-2 border-main" />
                           {question.type === 'scale' && question.scale && (
                             <div>
                               <div className="mb-20">
                                 <div className="md:flex justify-between">
-                                  <BorderBox>A: {question.scale.min_text}</BorderBox>
+                                  <BorderBox className="mb-2 md:mb-0">A: {question.scale.min_text}</BorderBox>
                                   <BorderBox>B: {question.scale.max_text}</BorderBox>
                                 </div>
-                                <FormControl sx={{ width: '100%' }} required>
-                                  <RadioGroup
-                                    row
-                                    aria-labelledby="demo-form-control-label-placement"
-                                    name="position"
-                                    defaultValue="top"
-                                    sx={{ justifyContent: 'space-between' }}
-                                  >
-                                    <FormControlLabel
-                                      value="1"
-                                      control={<Radio onChange={onChange} required={Boolean(question.required)} />}
-                                      label="Aに近い"
-                                      labelPlacement="bottom"
-                                      id={'q_' + question.id}
-                                      name={'q_' + question.id}
-                                      checked={data['q_' + question.id] === '1'}
-                                    />
-                                    <FormControlLabel
-                                      value="2"
-                                      control={<Radio onChange={onChange} />}
-                                      label="Aにやや近い"
-                                      labelPlacement="bottom"
-                                      id={'q_' + question.id}
-                                      name={'q_' + question.id}
-                                      checked={data['q_' + question.id] === '2'}
-                                    />
-                                    <FormControlLabel
-                                      value="3"
-                                      control={<Radio onChange={onChange} />}
-                                      label="Bにやや近い"
-                                      labelPlacement="bottom"
-                                      id={'q_' + question.id}
-                                      name={'q_' + question.id}
-                                      checked={data['q_' + question.id] === '3'}
-                                    />
-                                    <FormControlLabel
-                                      value="4"
-                                      control={<Radio onChange={onChange} />}
-                                      label="Bに近い"
-                                      labelPlacement="bottom"
-                                      id={'q_' + question.id}
-                                      name={'q_' + question.id}
-                                      checked={data['q_' + question.id] === '4'}
-                                    />
-                                  </RadioGroup>
-                                </FormControl>
+                                <ScaleInputGroup
+                                  id={'q_' + question.id}
+                                  name={'q_' + question.id}
+                                  onChange={onChange}
+                                  data={data['q_' + question.id]}
+                                />
                               </div>
                             </div>
                           )}

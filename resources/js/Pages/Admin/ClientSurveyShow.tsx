@@ -1,7 +1,7 @@
 import React, { FormEventHandler, SyntheticEvent, useEffect } from "react";
 import { Head, Link, router } from '@inertiajs/react';
 import { Survey } from "@/types/Survey";
-import { Container, FormControl, FormControlLabel, MenuItem, Radio, RadioGroup, Select, SelectChangeEvent, TextField } from "@mui/material";
+import { Container, FormControl, FormControlLabel, MenuItem, Radio, RadioGroup, Select, SelectChangeEvent, TextField, useMediaQuery, useTheme } from "@mui/material";
 import Title from "@/Components/Title";
 import { BorderBox } from "@/Components/Box";
 import ClientAuthenicatedLayout from "@/Layouts/ClientAuthenticatedLayout";
@@ -11,6 +11,7 @@ import { useForm } from "@inertiajs/react";
 import Button from "@/Components/Button";
 import { Answer } from "@/types/Answer";
 import { Response } from "@/types/Response";
+import ScaleInputGroup from "@/Components/ScaleInputGroup";
 
 interface Props {
   auth: PageProps['auth'];
@@ -24,6 +25,7 @@ interface InputProps {
 }
 
 const createInitialData = (response: Response): InputProps => {
+
   let data: InputProps = {}
   if (!response.answers) return data
   response.answers.map((answer: Answer) => {
@@ -33,6 +35,8 @@ const createInitialData = (response: Response): InputProps => {
 }
 
 const ClientSurveyShow = ({ auth, survey, response, flash, user_id }: Props) => {
+  const theme = useTheme();
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
   const { data, setData, post, put, processing, errors, reset } = useForm<InputProps>(response ? createInitialData(response) : {});
   const onChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement> | SelectChangeEvent) => {
     const name = e.target.name
@@ -81,55 +85,15 @@ const ClientSurveyShow = ({ auth, survey, response, flash, user_id }: Props) => 
                               <div>
                                 <div className="mb-20">
                                   <div className="md:flex justify-between">
-                                    <BorderBox>A: {question.scale.min_text}</BorderBox>
+                                    <BorderBox className="mb-2 md:mb-0">A: {question.scale.min_text}</BorderBox>
                                     <BorderBox>B: {question.scale.max_text}</BorderBox>
                                   </div>
-                                  <FormControl sx={{ width: '100%' }}>
-                                    <RadioGroup
-                                      row
-                                      aria-labelledby="demo-form-control-label-placement"
-                                      name="position"
-                                      defaultValue="top"
-                                      sx={{ justifyContent: 'space-between' }}
-                                    >
-                                      <FormControlLabel
-                                        value="1"
-                                        control={<Radio onChange={onChange} />}
-                                        label="Aに近い"
-                                        labelPlacement="bottom"
-                                        id={'q_' + question.id}
-                                        name={'q_' + question.id}
-                                        checked={data['q_' + question.id] === '1'}
-                                      />
-                                      <FormControlLabel
-                                        value="2"
-                                        control={<Radio onChange={onChange} />}
-                                        label="Aにやや近い"
-                                        labelPlacement="bottom"
-                                        id={'q_' + question.id}
-                                        name={'q_' + question.id}
-                                        checked={data['q_' + question.id] === '2'}
-                                      />
-                                      <FormControlLabel
-                                        value="3"
-                                        control={<Radio onChange={onChange} />}
-                                        label="Bにやや近い"
-                                        labelPlacement="bottom"
-                                        id={'q_' + question.id}
-                                        name={'q_' + question.id}
-                                        checked={data['q_' + question.id] === '3'}
-                                      />
-                                      <FormControlLabel
-                                        value="4"
-                                        control={<Radio onChange={onChange} />}
-                                        label="Bに近い"
-                                        labelPlacement="bottom"
-                                        id={'q_' + question.id}
-                                        name={'q_' + question.id}
-                                        checked={data['q_' + question.id] === '4'}
-                                      />
-                                    </RadioGroup>
-                                  </FormControl>
+                                  <ScaleInputGroup
+                                    id={'q_' + question.id}
+                                    name={'q_' + question.id}
+                                    onChange={onChange}
+                                    data={data['q_' + question.id]}
+                                  />
                                 </div>
                               </div>
                             )}
