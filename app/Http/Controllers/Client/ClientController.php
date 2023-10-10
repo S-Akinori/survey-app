@@ -25,11 +25,11 @@ class ClientController extends Controller
     }
     $query = Client::query();
     if ($request->target === 'answer') {
-      $query->with('responses')->whereHas('responses.survey', function($query) {
+      $query->with('responses')->whereHas('responses.survey', function ($query) {
         $query->where('id', 1);
       })->where('user_id', $user_id);
     } else if ($request->target === 'no-answer') {
-      $query->with('responses')->whereDoesntHave('responses.survey', function($query) {
+      $query->with('responses')->whereDoesntHave('responses.survey', function ($query) {
         $query->where('id', 1);
       })->where('user_id', $user_id);
     } else {
@@ -37,7 +37,7 @@ class ClientController extends Controller
     }
     $clientData = $query->paginate(20);
     $total = Client::where('user_id', $user_id)->count();
-    $answerTotal = Client::with('responses')->whereHas('responses.survey', function($query) {
+    $answerTotal = Client::with('responses')->whereHas('responses.survey', function ($query) {
       $query->where('id', 1);
     })->where('user_id', $user_id)->count();
     return Inertia::render('Dashboard', [
@@ -59,6 +59,10 @@ class ClientController extends Controller
     $clients = $this->extractDataOfCSV(storage_path("app/public/" . $path));
 
     $adminId = auth()->id(); // ログインしているユーザーのIDを取得
+
+    // CSVからクライアントIDのリストを取得
+    $clientIdsFromCSV = array_column($clients, 'client_id');
+
     foreach ($clients as $row) {
       $existingClient = Client::where('client_id', $row['client_id'])->where('user_id', $adminId)->first();
       if (!$existingClient) {
@@ -68,6 +72,14 @@ class ClientController extends Controller
         $client->name = $row['client_id']; //ダミー
         $client->password = Hash::make($row['client_id']); //ダミー
         $client->save();
+      }
+    }
+
+    // CSVに存在しないクライアントIDのレコードを削除
+    $existingClients = Client::where('user_id', $adminId)->get();
+    foreach ($existingClients as $existingClient) {
+      if (!in_array($existingClient->client_id, $clientIdsFromCSV)) {
+        $existingClient->delete();
       }
     }
 
@@ -125,7 +137,7 @@ class ClientController extends Controller
       $query = Client::query();
       $status = '';
       if ($request->target === 'answer') {
-        $clients = $query->with('responses')->whereHas('responses.survey', function($query) {
+        $clients = $query->with('responses')->whereHas('responses.survey', function ($query) {
           $query->where('id', 1);
         })->where('user_id', $user_id)->get();
         $status = '回答済み';
@@ -133,7 +145,7 @@ class ClientController extends Controller
           fputcsv($handle, [$client->client_id, $status, $client->responses[0]->submitted_at, $client->created_at]);
         }
       } else if ($request->target === 'no-answer') {
-        $clients = $query->with('responses')->whereDoesntHave('responses.survey', function($query) {
+        $clients = $query->with('responses')->whereDoesntHave('responses.survey', function ($query) {
           $query->where('id', 1);
         })->where('user_id', $user_id)->get();
         $status = '未回答';

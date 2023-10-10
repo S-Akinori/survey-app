@@ -81,6 +81,11 @@ export default function CreateList({ auth }: PageProps) {
             </TableBody>
           </Table>
         </div>
+        <div className='border p-4 mb-8'>
+          【注意】<br />
+          例えばクライアントIDが01,02,03のクライアントが存在していた場合、<br />
+          01, 02, 04のクライアントIDを持ったcsvをアップした際は、01, 02はそのまま、03は削除, 04は新規追加となります。
+        </div>
         <Button
           component="label"
           variant="contained"
