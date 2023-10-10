@@ -65,15 +65,17 @@ const FormShow = ({ survey, auth }: Props) => {
         <div className="mb-4">
           <Button><a href={route('admin.client.survey.show', { id: survey.id, user_id: survey.user_id })} target="_blank">アンケートを表示する</a></Button>
         </div>
-        <div className="mb-4">
-          <Button onClick={e => setCopy(true)}>アンケートURLを発行</Button>
-          {copy && (
-            <div className="p-4 border border-main mt-4">
-              <div>以下のURLを従業員に共有ください。ログインは各従業員に登録したIDが必要です。</div>
-              <p>{route('client.login', {user_id: survey.user_id, token: survey.user!.token})}</p>
-            </div>
-          )}
-        </div>
+        {survey.id != 1 && (
+          <div className="mb-4">
+            <Button onClick={e => setCopy(true)}>アンケートURLを発行</Button>
+            {copy && (
+              <div className="p-4 border border-main mt-4">
+                <div>以下のURLを従業員に共有ください。ログインは各従業員に登録したIDが必要です。</div>
+                <p>{route('client.login', {user_id: survey.user_id, token: survey.user!.token})}</p>
+              </div>
+            )}
+          </div>
+        )}
       </Container>
       <DeleteAlert open={open} setOpen={setOpen} routeName="admin.form.destroy" data={{ 'id': targetId }} />
     </AdminAuthenticatedLayout>

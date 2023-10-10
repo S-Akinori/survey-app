@@ -120,7 +120,7 @@ class ClientController extends Controller
       }
 
       // CSVヘッダーの書き込み
-      fputcsv($handle, ['id', '従業員ID', '状況', '回答日時', '登録日時']);
+      fputcsv($handle, ['従業員ID', '状況', '回答日時', '登録日時']);
 
       $query = Client::query();
       $status = '';
@@ -130,7 +130,7 @@ class ClientController extends Controller
         })->where('user_id', $user_id)->get();
         $status = '回答済み';
         foreach ($clients as $client) {
-          fputcsv($handle, [$client->id, $client->client_id, $status, $client->responses[0]->submitted_at, $client->created_at]);
+          fputcsv($handle, [$client->client_id, $status, $client->responses[0]->submitted_at, $client->created_at]);
         }
       } else if ($request->target === 'no-answer') {
         $clients = $query->with('responses')->whereDoesntHave('responses.survey', function($query) {
@@ -138,14 +138,14 @@ class ClientController extends Controller
         })->where('user_id', $user_id)->get();
         $status = '未回答';
         foreach ($clients as $client) {
-          fputcsv($handle, [$client->id, $client->client_id, $status, '', $client->created_at]);
+          fputcsv($handle, [$client->client_id, $status, '', $client->created_at]);
         }
       } else {
         $clients = $query->with('responses')->where('user_id', $user_id)->get();
         foreach ($clients as $client) {
           $status = $client->responses->where('survey_id', 1)->first() ? '回答済み' : '未回答';
           $submitted_at = $status === '回答済み' ? $client->responses->where('survey_id', 1)->first()->submitted_at : '';
-          fputcsv($handle, [$client->id, $client->client_id, $status, $submitted_at, $client->created_at]);
+          fputcsv($handle, [$client->client_id, $status, $submitted_at, $client->created_at]);
         }
       }
       Log::debug('csv-created');
