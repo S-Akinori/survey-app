@@ -172,10 +172,10 @@ export default function Dashboard({ auth, clientData, target = 'all', total, ans
               </TableContainer>
               <div className='mt-4 flex justify-between'>
                 {clientData?.prev_page_url && (
-                  <Button className='mr-auto'><Link href={`/dashboard?target=${target}&page=${clientData.current_page - 1}`}>前へ</Link></Button>
+                  <Button className='mr-auto'><Link href={`/dashboard?target=${target}&page=${clientData.current_page - 1}&${user_id ? `user_id=${user_id}` : ''}`}>前へ</Link></Button>
                 )}
                 {clientData?.next_page_url && (
-                  <Button className='ml-auto'><Link href={`/dashboard?target=${target}&page=${clientData.current_page + 1}`}>次へ</Link></Button>
+                  <Button className='ml-auto'><Link href={`/dashboard?target=${target}&page=${clientData.current_page + 1}&${user_id ? `user_id=${user_id}` : ''}`}>次へ</Link></Button>
                 )}
               </div>
             </div>
